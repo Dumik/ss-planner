@@ -13,15 +13,17 @@ type Props = {
   isSuccessful?: boolean;
   successfulText?: string;
   successfulIcon?: JSX.Element;
+  fullWith?: boolean
 } &  PropsWithChildren;
 
 const sizeClasses = {
-  large: 'p-3 md:p-4',
-  medium: 'p-3',
+  large: 'px-4 py-3',
+  medium: 'px-3 py-2',
+  small: 'p-1',
 };
 
 const variantClasses = {
-  filled: 'bg-purple-700 hover:bg-purple-600 text-white p-20',
+  filled: 'bg-purple-700 hover:bg-purple-600 text-white ',
   outline: 'border border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white',
 };
 
@@ -37,18 +39,20 @@ const Button: FC<Props> = ({
   isSuccessful,
   successfulText,
   successfulIcon,
+  fullWith,
   children,
 }) => (
   <button
     type="button"
     className={classNames(
-      'flex items-center justify-center rounded-md text-center font-bold transition duration-300 bg-slate-950',
+      'flex items-center justify-center rounded-md text-center font-bold transition duration-300 w-32',
       sizeClasses[size],
       variantClasses[variant],
-      className,
       {
         'pointer-events-none cursor-not-allowed': isLoading || isSuccessful || isDisabled,
-      }
+        'w-full': fullWith
+      },
+      className,
     )}
     onClick={onClick}
     disabled={isDisabled}
