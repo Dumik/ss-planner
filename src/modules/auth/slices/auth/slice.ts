@@ -1,4 +1,4 @@
-import {PayloadAction, createSlice} from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
 type AuthStateType = {
   accessToken: string | null;
@@ -18,9 +18,7 @@ export const authSlice = createSlice({
   reducers: {
     grantAccess: (
       state,
-      action: PayloadAction<
-        Pick<AuthStateType, 'accessToken' | 'refreshToken' | 'expiresIn'>
-      >,
+      action: PayloadAction<Pick<AuthStateType, 'accessToken' | 'refreshToken' | 'expiresIn'>>,
     ) => {
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;

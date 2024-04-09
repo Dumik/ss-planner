@@ -1,8 +1,8 @@
-import {useDispatch} from 'react-redux';
+import { useDispatch } from 'react-redux';
 
-import {bindActionCreators} from '@reduxjs/toolkit';
+import { bindActionCreators } from '@reduxjs/toolkit';
 
-import {authActions} from './auth/slice';
+import { authActions } from './auth/slice';
 
 const useAuthActions = () => {
   const dispatch = useDispatch();
@@ -10,4 +10,4 @@ const useAuthActions = () => {
   return bindActionCreators(authActions, dispatch);
 };
 
-export {useAuthActions};
+export { useAuthActions };

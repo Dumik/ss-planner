@@ -1,14 +1,13 @@
-import { Header } from "@/modules/core";
+'use client';
+import { Header } from '@/modules/core';
 
- const DashboardLayout = ({children}: {children: React.ReactNode})  => {
-  
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div> 
+    <div>
       <Header />
-      {children} 
-      
-      </div>
+      {children}
+    </div>
   );
-}
+};
 
-export default DashboardLayout
+export default DashboardLayout;

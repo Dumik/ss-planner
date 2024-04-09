@@ -1,3 +1,4 @@
+import { authSlice } from '@/modules/auth';
 import { persistCombineReducers } from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 
@@ -18,7 +19,9 @@ const storage = typeof window !== 'undefined' ? createWebStorage('local') : crea
 const persistConfigRoot = {
   key: 'root',
   storage,
-  whitelist: ['userPreferences'],
+  whitelist: ['auth'],
 };
 
-export const rootReducer = persistCombineReducers(persistConfigRoot, {});
+export const rootReducer = persistCombineReducers(persistConfigRoot, {
+  auth: authSlice.reducer,
+});

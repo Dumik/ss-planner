@@ -7,6 +7,7 @@ import { rootReducer } from './rootReducer';
 export const reduxStore = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }).concat(),
 });
 
 // Infer the type of makeStore
