@@ -6,15 +6,15 @@ type Props = {
   text?: string;
   onClick?: () => void;
   isDisabled?: boolean;
-  size?: 'large' | 'medium';
-  variant?: 'filled' | 'outline';
+  size?: 'large' | 'medium' | 'small';
+  variant?: 'filled' | 'outline' | 'text';
   isLoading?: boolean;
   loadingText?: string;
   isSuccessful?: boolean;
   successfulText?: string;
   successfulIcon?: JSX.Element;
-  fullWith?: boolean
-} &  PropsWithChildren;
+  fullWith?: boolean;
+} & PropsWithChildren;
 
 const sizeClasses = {
   large: 'px-4 py-3',
@@ -25,6 +25,7 @@ const sizeClasses = {
 const variantClasses = {
   filled: 'bg-purple-700 hover:bg-purple-600 text-white ',
   outline: 'border border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white',
+  text: 'text-purple-700 hover:text-purple-500',
 };
 
 const Button: FC<Props> = ({
@@ -43,25 +44,20 @@ const Button: FC<Props> = ({
   children,
 }) => (
   <button
-    type="button"
+    type='button'
     className={classNames(
       'flex items-center justify-center rounded-md text-center font-bold transition duration-300 w-32',
       sizeClasses[size],
       variantClasses[variant],
       {
         'pointer-events-none cursor-not-allowed': isLoading || isSuccessful || isDisabled,
-        'w-full': fullWith
+        'w-full': fullWith,
       },
       className,
     )}
     onClick={onClick}
-    disabled={isDisabled}
-  >
-    {isLoading && (
-      <>
-        {loadingText}
-      </>
-    )}
+    disabled={isDisabled}>
+    {isLoading && <>{loadingText}</>}
     {isSuccessful && (
       <>
         {successfulIcon}
