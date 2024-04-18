@@ -8,23 +8,32 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
 }
 
-const Input: React.FC<InputProps> = ({ error, startIcon, placeholder = 'Type here...', endIcon, className, ...rest }) => {
+const Input: React.FC<InputProps> = ({
+  error,
+  startIcon,
+  placeholder = 'Type here...',
+  endIcon,
+  className,
+  ...rest
+}) => {
   return (
-    <div className="relative">
-      <div className="flex items-center border rounded-md p-1 w-full border-purple-700  ">
-        {startIcon && <div className="mr-2">{startIcon}</div>}
+    <div className='relative'>
+      <div className='flex items-center border rounded-md w-full border-purple-700  '>
+        {startIcon && <div className='mr-2'>{startIcon}</div>}
         <input
-        placeholder={placeholder}
-          className={classNames("flex-1 outline-none px-3 py-2", {
-            "border-red-500": error,
-          }, className)}
+          placeholder={placeholder}
+          className={classNames(
+            'flex-1 outline-none px-4 py-3 rounded-md',
+            {
+              'border-red-500': error,
+            },
+            className,
+          )}
           {...rest}
         />
-        {endIcon && <div className="ml-2">{endIcon}</div>}
+        {endIcon && <div className='ml-2'>{endIcon}</div>}
       </div>
-      {error && (
-        <span className="absolute top-full text-red-500 mt-1">{error}</span>
-      )}
+      {error && <span className='absolute top-full text-red-500 mt-1'>{error}</span>}
     </div>
   );
 };

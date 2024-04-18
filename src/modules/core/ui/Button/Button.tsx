@@ -1,13 +1,14 @@
 import { FC, PropsWithChildren } from 'react';
 import classNames from 'classnames';
+import { ButtonSizeEnum, ButtonVariantEnum } from './types';
 
 type Props = {
   className?: string;
   text?: string;
   onClick?: () => void;
   isDisabled?: boolean;
-  size?: 'large' | 'medium' | 'small';
-  variant?: 'filled' | 'outline' | 'text';
+  size?: ButtonSizeEnum;
+  variant?: ButtonVariantEnum;
   isLoading?: boolean;
   loadingText?: string;
   isSuccessful?: boolean;
@@ -33,8 +34,8 @@ const Button: FC<Props> = ({
   text,
   className,
   onClick,
-  variant = 'filled',
-  size = 'large',
+  variant = ButtonVariantEnum.FILLED,
+  size = ButtonSizeEnum.LARGE,
   isDisabled,
   isLoading,
   loadingText,

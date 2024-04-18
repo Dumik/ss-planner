@@ -1,9 +1,11 @@
 'use client';
-import { Button, Input } from '@/modules/core';
 import { useState } from 'react';
 import { DateRangePicker, FocusedInputShape } from 'react-dates';
+
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
+
+import { Button, ButtonVariantEnum, Input } from '@/modules/core';
 
 const ToolBar = () => {
   const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
@@ -15,11 +17,11 @@ const ToolBar = () => {
     setDateTo(endDate);
   };
   return (
-    <div className='flex w-full gap-4  p-3 rounded-md border-2 border-purple-700 justify-between'>
+    <div className='flex w-full p-3 rounded-md border-2 border-purple-700 justify-between'>
       <div className='flex justify-center items-center'>
         <span className='text-xl font-medium'>Select the days and amount on the period:</span>
       </div>
-      <div className='flex gap-4'>
+      <div className='flex gap-3'>
         <DateRangePicker
           startDate={dateFrom}
           startDateId='start_date_id'
@@ -36,7 +38,7 @@ const ToolBar = () => {
           customArrowIcon='—'
         />
         <Input type='number' />
-        <Button variant='filled' text='Save' size='large' className='w-50' />
+        <Button variant={ButtonVariantEnum.FILLED} text='Save' className='w-50' />
       </div>
     </div>
   );

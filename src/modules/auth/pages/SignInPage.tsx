@@ -1,4 +1,4 @@
-import { Button, Input, Logo } from '@/modules/core';
+import { Button, ButtonSizeEnum, ButtonVariantEnum, Input, Logo } from '@/modules/core';
 import { useForm } from 'react-hook-form';
 import { useAuthActions } from '../slices';
 import Image from 'next/image';
@@ -24,18 +24,18 @@ const SignInPage = () => {
       <form className='flex flex-col w-full gap-4 p-8' onSubmit={handleSubmit(onSubmit)}>
         <Input {...register('username')} placeholder='Username' />
         <Input {...register('password')} type='password' placeholder='Password' />
-        <span className='flex text-sm'>
-          Don`t have a account?
+        <span className='flex text-sm items-center'>
+          Don`t have an account?
           <Button
             text='Sign up'
-            size='small'
-            variant='text'
-            className='p-0 w-20'
+            size={ButtonSizeEnum.SMALL}
+            variant={ButtonVariantEnum.TEXT}
+            className='p-0 w-16'
             type='button'
             onClick={handleSignUp}
           />
         </span>
-        <Button type='submit' text='Sign in' fullWith size='large' />
+        <Button type='submit' text='Sign in' fullWith />
       </form>
     </div>
   );

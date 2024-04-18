@@ -1,4 +1,4 @@
-import { Button, Input, Logo } from '@/modules/core';
+import { Button, ButtonSizeEnum, ButtonVariantEnum, Input, Logo } from '@/modules/core';
 import { useForm } from 'react-hook-form';
 import { useAuthActions } from '../slices';
 import { useRouter } from 'next/navigation';
@@ -24,18 +24,18 @@ const SignUpPage = () => {
         <Input {...register('username')} placeholder='Username' />
         <Input {...register('password')} type='password' placeholder='Password' />
         <Input {...register('confirmPassword')} type='password' placeholder='Confirm Password' />
-        <span className='flex text-sm'>
-          Already have a account?
+        <span className='flex text-sm items-center'>
+          Already have an account?
           <Button
             text='Sign In'
-            size='small'
-            variant='text'
-            className='p-0 w-20'
+            size={ButtonSizeEnum.SMALL}
+            variant={ButtonVariantEnum.TEXT}
+            className='p-0 w-16'
             type='button'
             onClick={handleSignIn}
           />
         </span>
-        <Button type='submit' text='Sign up' fullWith size='large' />
+        <Button type='submit' text='Sign up' fullWith />
       </form>
     </div>
   );

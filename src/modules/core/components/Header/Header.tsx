@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import React from 'react';
-import { Button, Logo } from '@/modules/core';
+import { Button, ButtonSizeEnum, ButtonVariantEnum, Logo } from '@/modules/core';
 import { useAuthActions } from '@/modules/auth';
 
 const Header = () => {
@@ -21,7 +21,12 @@ const Header = () => {
           />
           <span className='text-purple-700 font-semibold'>Smart Spender</span>
         </div>
-        <Button variant='text' text='Log out >' size='small' onClick={handleLogOut} />
+        <Button
+          text='Log out >'
+          size={ButtonSizeEnum.SMALL}
+          variant={ButtonVariantEnum.TEXT}
+          onClick={handleLogOut}
+        />
       </div>
     </header>
   );
