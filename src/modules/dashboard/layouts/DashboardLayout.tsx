@@ -5,7 +5,9 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <Header />
-      {children}
+      <div className='flex justify-center'>
+        <div className='max-w-[1400px] w-full'>{children}</div>
+      </div>
     </div>
   );
 };
