@@ -14,6 +14,7 @@ type Props = {
   successfulText?: string;
   successfulIcon?: JSX.Element;
   fullWith?: boolean;
+  type?: 'submit' | 'reset' | 'button';
 } & PropsWithChildren;
 
 const sizeClasses = {
@@ -42,9 +43,10 @@ const Button: FC<Props> = ({
   successfulIcon,
   fullWith,
   children,
+  type,
 }) => (
   <button
-    type='button'
+    type={type}
     className={classNames(
       'flex items-center justify-center rounded-md text-center font-bold transition duration-300 w-32',
       sizeClasses[size],
