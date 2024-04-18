@@ -20,13 +20,6 @@ export const authSlice = createSlice({
       state,
       action: PayloadAction<Pick<AuthStateType, 'accessToken' | 'refreshToken' | 'expiresIn'>>,
     ) => {
-      console.log(
-        '%c jordan state',
-        'color: lime;',
-        state,
-        state.accessToken,
-        action.payload.accessToken,
-      );
       state.accessToken = action.payload.accessToken;
       state.refreshToken = action.payload.refreshToken;
       state.expiresIn = action.payload.expiresIn;

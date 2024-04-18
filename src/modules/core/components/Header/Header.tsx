@@ -9,7 +9,7 @@ const Header = () => {
     resetAccess();
   };
   return (
-    <header className=' text-white p-1 sticky border-2 border-purple-700 '>
+    <header className=' text-white p-1 sticky border-b-2 border-purple-700 '>
       <div className='container mx-auto flex justify-between   items-center'>
         <div className='container mx-auto flex items-center'>
           <Image
