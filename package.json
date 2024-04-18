@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@date-fns/upgrade": "^1.0.3",
     "@reduxjs/toolkit": "^2.2.3",
     "@types/react-dates": "^21.8.6",
     "classnames": "^2.5.1",
