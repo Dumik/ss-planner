@@ -1,7 +1,6 @@
 'use client';
 import { PhotoBanner } from '@/modules/core';
-import ToolBar from '../components/ToolBar/ToolBar';
-import { DayCardsContainer } from '../components';
+import { DayCardsContainer, ToolBar } from '@/modules/dashboard/components';
 
 const DashboardPage = () => {
   return (

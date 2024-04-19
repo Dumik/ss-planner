@@ -40,10 +40,22 @@ const DayCardsContainer = () => {
     ],
   };
 
+  const onAddExpense = (dayIndex: number, newExpense: { price: number; category: string }) => {
+    interfaceData.days[dayIndex].expenses.push(newExpense);
+  };
+
   return (
     <div className='grid grid-cols-5 gap-3 items-start'>
-      {interfaceData.days.map((item) => {
-        return <DayCard key={item.date} className='col-span-1' day={item} />;
+      {interfaceData.days.map((item, index) => {
+        return (
+          <DayCard
+            key={item.date}
+            className='col-span-1'
+            day={item}
+            dayIndex={index}
+            onAddExpense={onAddExpense}
+          />
+        );
       })}
     </div>
   );
