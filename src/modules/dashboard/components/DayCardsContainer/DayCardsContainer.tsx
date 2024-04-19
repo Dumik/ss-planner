@@ -1,3 +1,5 @@
+'use client';
+import { useState } from 'react';
 import { InterfaceData } from '../../types';
 import DayCard from '../DayCard/DayCard';
 
@@ -39,9 +41,17 @@ const DayCardsContainer = () => {
       },
     ],
   };
-
   const onAddExpense = (dayIndex: number, newExpense: { price: number; category: string }) => {
     interfaceData.days[dayIndex].expenses.push(newExpense);
+  };
+
+  const updateExpenses = (
+    dayIndex: number,
+    expensesIndex: number,
+    value: { price: number; category: string },
+  ) => {
+    console.log('%c jordan value', 'color: lime;', value);
+    interfaceData.days[dayIndex].expenses[expensesIndex] = value;
   };
 
   return (
@@ -54,6 +64,7 @@ const DayCardsContainer = () => {
             day={item}
             dayIndex={index}
             onAddExpense={onAddExpense}
+            updateExpenses={updateExpenses}
           />
         );
       })}
