@@ -1,7 +1,9 @@
+'use client';
 import Image from 'next/image';
 import React from 'react';
 import { Button, ButtonSizeEnum, ButtonVariantEnum, Logo } from '@/modules/core';
 import { useAuthActions } from '@/modules/auth';
+import { CaretRight } from '@phosphor-icons/react';
 
 const Header = () => {
   const { resetAccess } = useAuthActions();
@@ -9,8 +11,8 @@ const Header = () => {
     resetAccess();
   };
   return (
-    <header className=' text-white p-1 sticky border-b-2 border-purple-700 '>
-      <div className='container mx-auto flex justify-between   items-center'>
+    <header className='h-20 text-white p-1 border-b-2 border-purple-700 fixed w-full bg-white z-10'>
+      <div className='container mx-auto flex justify-between items-center'>
         <div className='container mx-auto flex items-center'>
           <Image
             src={Logo}
@@ -22,11 +24,15 @@ const Header = () => {
           <span className='text-purple-700 font-semibold'>Smart Spender</span>
         </div>
         <Button
-          text='Log out >'
+          text='Log out'
           size={ButtonSizeEnum.SMALL}
           variant={ButtonVariantEnum.TEXT}
-          onClick={handleLogOut}
-        />
+          onClick={handleLogOut}>
+          <div className='flex items-center'>
+            <span>Log out</span>
+            <CaretRight size={20} className='fill-purple-700' weight='bold' />
+          </div>
+        </Button>
       </div>
     </header>
   );

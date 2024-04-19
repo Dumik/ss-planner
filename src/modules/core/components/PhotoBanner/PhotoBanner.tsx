@@ -57,7 +57,7 @@ const PhotoBanner = () => {
         <div className='w-full'>
           <span>Search:</span>
           <Input type='text' onChange={(e) => searchPhotos(e.target.value)} />
-          <div className='h-96 overflow-y-scroll grid grid-cols-3 gap-1 mt-8'>
+          <div className='h-96 overflow-y-scroll grid grid-cols-4 gap-1 mt-8'>
             {photos?.map((photo) => (
               <Image
                 key={photo.id}
