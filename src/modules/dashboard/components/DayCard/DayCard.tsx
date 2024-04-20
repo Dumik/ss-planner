@@ -33,12 +33,15 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
     register,
     formState: { errors },
     watch,
+    reset,
   } = useForm();
 
   const handleAddExpense = () => {
     onAddExpense(dayIndex, newExpense);
     setNewExpense({ price: 0, category: '' });
   };
+
+  const totalAmount = day.expenses.reduce((total, expense) => total + expense.price, 0);
 
   return (
     <div className={classNames('w-full border-2 border-purple-50 rounded-md', className)}>
@@ -67,9 +70,9 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                 {...register(inputNamePrice, { required: true, value: price })}
                 onBlur={() => {
                   const values = getValues();
-
-                  updateExpenses(dayIndex, index, { price: values[inputNamePrice], category });
+                  updateExpenses(dayIndex, index, { price: +values[inputNamePrice], category });
                   setIsEditing(false);
+                  reset();
                 }}
                 onChange={(e) => {
                   const { value } = e.target as HTMLInputElement;
@@ -88,6 +91,7 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                   const values = getValues();
                   updateExpenses(dayIndex, index, { price, category: values[inputNameCategory] });
                   setIsEditing(false);
+                  reset();
                 }}
                 onChange={(e) => {
                   const { value } = e.target as HTMLInputElement;
@@ -100,13 +104,28 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
         );
       })}
 
+      {!!totalAmount && (
+        <div className='flex justify-center items-center h-12 border-t border-purple-50 '>
+          <span
+            className={classNames('font-semibold text-base text-purple-950', {
+              'text-red-500': totalAmount > day.amountPerDay,
+              'text-green-600': totalAmount < day.amountPerDay,
+            })}>
+            {totalAmount}
+          </span>
+        </div>
+      )}
+
       <div className='border-t border-purple-50'>
         <Button
           text='Add line +'
           variant={ButtonVariantEnum.TEXT}
-          className='w-full hover:bg-purple-50 rounded-none rounded-b-md text-xs'
+          className='w-full hover:bg-purple-50 rounded-none rounded-b text-xs disabled:bg-slate-100'
           type='button'
           onClick={handleAddExpense}
+          isDisabled={day.expenses.some(
+            (item, index) => index === day.expenses.length - 1 && item.price === 0,
+          )}
         />
       </div>
     </div>
