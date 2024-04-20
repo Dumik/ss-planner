@@ -12,7 +12,7 @@ type DayCardProps = {
   dayIndex: number;
   updateExpenses: (
     dayIndex: number,
-    expensesIndex: number,
+    expenseIndex: number,
     value: {
       price: number;
       category: string;
@@ -21,6 +21,7 @@ type DayCardProps = {
 };
 
 const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: DayCardProps) => {
+  const [isEditing, setIsEditing] = useState(false);
   const [newExpense, setNewExpense] = useState<{ price: number; category: string }>({
     price: 0,
     category: '',
@@ -28,8 +29,10 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
 
   const {
     setValue,
+    getValues,
     register,
     formState: { errors },
+    watch,
   } = useForm();
 
   const handleAddExpense = () => {
@@ -50,37 +53,46 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
       {day.expenses.map(({ price, category }, index) => {
         const inputNamePrice = `price-${dayIndex}-${index}`;
         const inputNameCategory = `category-${dayIndex}-${index}`;
+
         return (
           <div
             key={`${price}-${category}-${index}`}
             className='items-center border-t border-purple-50  grid grid-cols-6'>
             <div className='col-span-2 border-r border-purple-50 py-2 px-1'>
               <InputEmpty
-                value={price}
+                value={isEditing ? watch(inputNamePrice) : watch(inputNamePrice) || price}
                 className='w-full'
                 placeholder='Sum'
                 type='number'
                 {...register(inputNamePrice, { required: true, value: price })}
-                onBlur={(e) => {
+                onBlur={() => {
+                  const values = getValues();
+
+                  updateExpenses(dayIndex, index, { price: values[inputNamePrice], category });
+                  setIsEditing(false);
+                }}
+                onChange={(e) => {
                   const { value } = e.target as HTMLInputElement;
-                  updateExpenses(dayIndex, index, { price, category: value });
+                  setValue(inputNamePrice, value);
+                  setIsEditing(true);
                 }}
               />
             </div>
             <div className='col-span-4  py-2 px-1'>
               <InputEmpty
-                value={category}
+                value={isEditing ? watch(inputNameCategory) : watch(inputNameCategory) || category}
                 className='w-full'
                 placeholder='Category'
                 {...register(inputNameCategory, { required: true, value: category })}
-                onBlur={(e) => {
-                  const { value } = e.target as HTMLInputElement;
-                  updateExpenses(dayIndex, index, { price, category: value });
+                onBlur={() => {
+                  const values = getValues();
+                  updateExpenses(dayIndex, index, { price, category: values[inputNameCategory] });
+                  setIsEditing(false);
                 }}
                 onChange={(e) => {
                   const { value } = e.target as HTMLInputElement;
                   setValue(inputNameCategory, value);
-                  updateExpenses(dayIndex, index, { price, category: value });
+                  setIsEditing(true);
                 }}
               />
             </div>

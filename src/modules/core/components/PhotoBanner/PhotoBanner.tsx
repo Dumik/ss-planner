@@ -24,7 +24,7 @@ type BasicType = {
 const PhotoBanner = () => {
   const [photos, setPhotos] = useState<BasicType[] | undefined>();
   const { setBannerImage } = useBannerActions();
-  const { bannerImage } = useTypedSelector((state) => state.bannerImage);
+  const { bannerImage } = useTypedSelector((state) => state.banner);
 
   const searchPhotos = async (query: string) => {
     const response = await unsplash.search.getPhotos({
@@ -50,7 +50,7 @@ const PhotoBanner = () => {
       }}>
       <DialogWrapper
         openElement={
-          <span className='text-sm p-2 bg-white/50 hover:bg-black/10 rounded-md duration-300'>
+          <span className='text-sm p-2 bg-white/50 hover:bg-black/20 hover:text-white rounded-md duration-300'>
             Change cover
           </span>
         }>

@@ -1,5 +1,6 @@
 import { authSlice } from '@/modules/auth';
 import bannerSlice from '@/modules/core/slices/bannerSlice/slice';
+import { periodSlice } from '@/modules/dashboard/slices';
 import { persistCombineReducers } from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 
@@ -20,10 +21,11 @@ const storage = typeof window !== 'undefined' ? createWebStorage('local') : crea
 const persistConfigRoot = {
   key: 'root',
   storage,
-  whitelist: ['auth', 'bannerImage'],
+  whitelist: ['auth', 'banner', 'period', 'expense', 'newExpense'],
 };
 
 export const rootReducer = persistCombineReducers(persistConfigRoot, {
   auth: authSlice.reducer,
-  bannerImage: bannerSlice.reducer,
+  banner: bannerSlice.reducer,
+  period: periodSlice.reducer,
 });

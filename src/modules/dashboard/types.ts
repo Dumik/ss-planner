@@ -7,9 +7,10 @@ export type Day = {
   date: string;
   day: string;
   amountPerDay: number;
-  expenses: Expense[];
+  expenses: Expense[] | [];
 };
 
-export type InterfaceData = {
+export type PeriodType = {
+  period?: string | null;
   days: Day[];
 };

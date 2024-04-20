@@ -1,62 +1,28 @@
 'use client';
-import { useState } from 'react';
-import { InterfaceData } from '../../types';
-import DayCard from '../DayCard/DayCard';
+
+import { DayCard } from '@/dashboard/components';
+import { useTypedSelector } from '@/store';
+import { usePeriodActions } from '@/dashboard/slices';
 
 const DayCardsContainer = () => {
-  const interfaceData: InterfaceData = {
-    days: [
-      {
-        date: '2020/12/12',
-        day: 'monday',
-        amountPerDay: 400,
-        expenses: [
-          {
-            price: 40,
-            category: 'atb0',
-          },
-        ],
-      },
+  const { period } = useTypedSelector((state) => state.period);
+  const { addPeriodExpense, updateExpenses } = usePeriodActions();
 
-      {
-        date: '2020/12/12',
-        day: 'tuesday',
-        amountPerDay: 400,
-        expenses: [],
-      },
-      {
-        date: '2020/12/12',
-        day: 'Wednesday',
-        amountPerDay: 400,
-        expenses: [
-          {
-            price: 40,
-            category: 'atb1',
-          },
-          {
-            price: 40,
-            category: 'atb2',
-          },
-        ],
-      },
-    ],
-  };
   const onAddExpense = (dayIndex: number, newExpense: { price: number; category: string }) => {
-    interfaceData.days[dayIndex].expenses.push(newExpense);
+    addPeriodExpense({ newExpense: { ...newExpense, dayIndex } });
   };
 
-  const updateExpenses = (
+  const onUpdateExpenses = (
     dayIndex: number,
-    expensesIndex: number,
+    expenseIndex: number,
     value: { price: number; category: string },
   ) => {
-    console.log('%c jordan value', 'color: lime;', value);
-    interfaceData.days[dayIndex].expenses[expensesIndex] = value;
+    updateExpenses({ expense: { ...value, dayIndex, expenseIndex } });
   };
 
   return (
     <div className='grid grid-cols-5 gap-3 items-start'>
-      {interfaceData.days.map((item, index) => {
+      {period.days.map((item, index) => {
         return (
           <DayCard
             key={item.date}
@@ -64,7 +30,7 @@ const DayCardsContainer = () => {
             day={item}
             dayIndex={index}
             onAddExpense={onAddExpense}
-            updateExpenses={updateExpenses}
+            updateExpenses={onUpdateExpenses}
           />
         );
       })}

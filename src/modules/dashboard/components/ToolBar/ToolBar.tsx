@@ -5,14 +5,17 @@ import { DateRangePicker, FocusedInputShape } from 'react-dates';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
-import { Button, ButtonVariantEnum, Input } from '@/modules/core';
+import { Button, ButtonVariantEnum, Input, useBannerActions } from '@/modules/core';
 import moment from 'moment';
+import { usePeriodActions } from '../../slices';
+import { PeriodType } from '../../types';
 
 const ToolBar = () => {
   const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
   const [dateFrom, setDateFrom] = useState<moment.Moment | null>(null);
   const [dateTo, setDateTo] = useState<moment.Moment | null>(null);
   const [amount, setAmount] = useState<string>('');
+  const { setPeriod } = usePeriodActions();
 
   const onDatesChange = ({
     startDate,
@@ -34,19 +37,21 @@ const ToolBar = () => {
           )
         : null;
 
-    const periodData = {
+    const periodData: PeriodType = {
       period:
         datesBetween &&
         `${datesBetween[0].format('YYYY/MM/DD')}-${datesBetween[datesBetween?.length - 1].format('YYYY/MM/DD')}`,
       days: [...Array(daysBetweenDates)].map((_, index) => {
         return {
-          date: datesBetween && datesBetween[index].format('YYYY/MM/DD'),
-          day: datesBetween && datesBetween[index].format('dddd'),
-          amountPerDay: (+amount / daysBetweenDates)?.toFixed(1),
+          date: datesBetween ? datesBetween[index].format('YYYY/MM/DD') : '',
+          day: datesBetween ? datesBetween[index].format('dddd') : '',
+          amountPerDay: +(+amount / daysBetweenDates)?.toFixed(1) || 0,
           expenses: [],
         };
       }),
     };
+
+    setPeriod({ period: periodData });
     console.log('%c jordan periodData', 'color: lime;', periodData);
   };
 
