@@ -14,6 +14,7 @@ import { getDaysBetweenDates, getTotalPeriodAmount } from '../../utils';
 
 const ToolBar = () => {
   const { period } = useTypedSelector((state) => state.period);
+  const { setPeriod, resetPeriod } = usePeriodActions();
 
   const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
   const [dateFrom, setDateFrom] = useState<moment.Moment | null>(moment(period?.dateStart) || null);
@@ -22,13 +23,12 @@ const ToolBar = () => {
   const [errors, setErrors] = useState<{ dates?: boolean; amount?: boolean }>();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
 
-  const { setPeriod, resetPeriod } = usePeriodActions();
-
   const totalAmount = getTotalPeriodAmount(period);
   const daysBetweenDates = getDaysBetweenDates(
     dateFrom || period?.dateStart,
     dateTo || period?.dateEnd,
   );
+
   const onDatesChange = ({
     startDate,
     endDate,
@@ -76,25 +76,30 @@ const ToolBar = () => {
     };
 
     setPeriod({ period: periodData });
+    setIsOpenDialog(false);
   };
 
   const handleResetPeriod = () => {
+    setDateTo(null);
+    setDateFrom(null);
+    setAmount('');
     resetPeriod();
   };
 
   return (
     <div className='flex w-full p-3 rounded-md border-2 border-purple-700 justify-between'>
       <div className='flex justify-center items-center'>
-        {totalAmount >= 0 ? (
+        {totalAmount >= 0 && daysBetweenDates ? (
           <div className='flex'>
             <span className='text-xl font-medium'>
-              Period -
+              Period -{' '}
               <span className='text-xl font-medium text-purple-950'>
-                {daysBetweenDates ? daysBetweenDates + ' days, ' : ''}
+                {daysBetweenDates + ' days, '}
               </span>
             </span>
             <span className='text-xl font-medium'>
-              Total - <span className='text-xl font-medium text-purple-950'>{totalAmount}$</span>
+              Total expenses -{' '}
+              <span className='text-xl font-medium text-purple-950'>{totalAmount}$</span>
             </span>
           </div>
         ) : (
