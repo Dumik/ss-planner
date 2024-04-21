@@ -1,6 +1,6 @@
 // tailwind.config.js
 /** @type {import('tailwindcss').Config} */
-import type {Config} from 'tailwindcss';
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
@@ -12,6 +12,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
+        disabled: {
+          100: '#f2f2f2',
+        },
         purple: {
           50: '#F5E1FF',
           100: '#D1B0FF',

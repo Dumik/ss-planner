@@ -3,11 +3,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTrigger } from '@/core/ui';
 
 type DialogWrapperProps = {
   openElement: React.ReactNode;
+  isOpen?: boolean;
+  onOpenChange?: (open: boolean) => void;
 } & PropsWithChildren;
 
-const DialogWrapper = ({ children, openElement }: DialogWrapperProps) => {
+const DialogWrapper = ({ children, openElement, isOpen, onOpenChange }: DialogWrapperProps) => {
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger>{openElement}</DialogTrigger>
       <DialogContent>
         <DialogHeader>{children}</DialogHeader>

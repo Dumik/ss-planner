@@ -4,6 +4,8 @@ import classNames from 'classnames';
 import { Day, Expense } from '../../types';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { useState } from 'react';
+import { omHappy, omSad } from '@/modules/core/assets/img';
+import Image from 'next/image';
 
 type DayCardProps = {
   className?: string;
@@ -46,7 +48,7 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
   return (
     <div className={classNames('w-full border-2 border-purple-50 rounded-md', className)}>
       <span className='flex justify-center items-center p-2 font-semibold text-sm bg-purple-50/50 text-purple-950 uppercase'>
-        {`${day.day} - ${day.amountPerDay}`}
+        {`${day.date} - ${day.day} - ${day.amountPerDay}`}
       </span>
       {!day.expenses.length && (
         <div className='flex justify-center items-center h-12'>
@@ -105,14 +107,19 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
       })}
 
       {!!totalAmount && (
-        <div className='flex justify-center items-center h-12 border-t border-purple-50 '>
+        <div className='flex justify-center items-center h-12 border-t border-purple-50 gap-2'>
           <span
             className={classNames('font-semibold text-base text-purple-950', {
               'text-red-500': totalAmount > day.amountPerDay,
               'text-green-600': totalAmount < day.amountPerDay,
             })}>
-            {totalAmount}
+            {totalAmount.toFixed(2)}
           </span>
+          {totalAmount < day.amountPerDay ? (
+            <Image src={omHappy} alt='' width={30} />
+          ) : (
+            <Image src={omSad} alt='' width={30} />
+          )}
         </div>
       )}
 

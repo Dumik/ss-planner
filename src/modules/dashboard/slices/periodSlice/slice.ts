@@ -52,6 +52,10 @@ export const periodSlice = createSlice({
 
       state.period = updatedPeriod;
     },
+
+    resetPeriod: (state) => {
+      Object.assign(state, initialState);
+    },
   },
 });
 

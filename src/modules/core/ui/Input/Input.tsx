@@ -18,12 +18,15 @@ const Input: React.FC<InputProps> = ({
 }) => {
   return (
     <div className='relative'>
-      <div className='flex items-center border rounded-md w-full border-purple-700  '>
+      <div
+        className={classNames('flex items-center border rounded-md w-full border-purple-700', {
+          'border-red-600': error,
+        })}>
         {startIcon && <div className='mr-2'>{startIcon}</div>}
         <input
           placeholder={placeholder}
           className={classNames(
-            'flex-1 outline-none px-4 py-3 rounded-md',
+            'flex-1 outline-none px-4 py-3 rounded-md disabled:bg-disabled-100',
             {
               'border-red-500': error,
             },

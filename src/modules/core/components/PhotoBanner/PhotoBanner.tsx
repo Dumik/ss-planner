@@ -8,6 +8,7 @@ import { DialogWrapper } from '@/core/components';
 import { Input } from '@/core/ui';
 import { useBannerActions } from '@/core/slices';
 import { useTypedSelector } from '@/store';
+import { getTotalPeriodAmount } from '@/modules/dashboard/utils';
 
 const unsplash = createApi({
   accessKey: `${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}`,
@@ -25,6 +26,9 @@ const PhotoBanner = () => {
   const [photos, setPhotos] = useState<BasicType[] | undefined>();
   const { setBannerImage } = useBannerActions();
   const { bannerImage } = useTypedSelector((state) => state.banner);
+  const { period } = useTypedSelector((state) => state.period);
+
+  const totalAmount = getTotalPeriodAmount(period);
 
   const searchPhotos = async (query: string) => {
     const response = await unsplash.search.getPhotos({
@@ -42,7 +46,7 @@ const PhotoBanner = () => {
 
   return (
     <div
-      className='bg-purple-500 p-10 h-96 rounded'
+      className='bg-purple-500 p-10 h-96 rounded flex items-end justify-end'
       style={{
         backgroundImage: `url("${bannerImage || 'https://images.unsplash.com/photo-1521117184087-0bf82f2385ab?crop=entropy&cs=srgb&fm=jpg&ixid=M3w1OTIxNTl8MHwxfHNlYXJjaHw0fHxsaW5lc3xlbnwwfHx8fDE3MTM0NTkxNDh8MA&ixlib=rb-4.0.3&q=85'}")`,
         backgroundSize: 'cover',

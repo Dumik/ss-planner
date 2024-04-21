@@ -12,5 +12,8 @@ export type Day = {
 
 export type PeriodType = {
   period?: string | null;
+  amountOnPeriod?: number;
+  dateStart?: moment.Moment;
+  dateEnd?: moment.Moment;
   days: Day[];
 };

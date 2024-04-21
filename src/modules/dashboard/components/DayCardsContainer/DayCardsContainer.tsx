@@ -4,6 +4,7 @@ import { DayCard } from '@/dashboard/components';
 import { useTypedSelector } from '@/store';
 import { usePeriodActions } from '@/dashboard/slices';
 import { Fragment } from 'react';
+import { getTotalPeriodAmount } from '../../utils';
 
 const DayCardsContainer = () => {
   const { period } = useTypedSelector((state) => state.period);
@@ -21,8 +22,11 @@ const DayCardsContainer = () => {
     updateExpenses({ expense: { ...value, dayIndex, expenseIndex } });
   };
 
+  const totalAmount = getTotalPeriodAmount(period);
+
   return (
     <div className='grid grid-cols-5 gap-3 items-start'>
+      <div className='text-xl text-purple-950 font-semibold'>Total - {totalAmount}</div>
       {period.days.map((item, index) => {
         if ((index + 1) % 6 === 0 || index === 0) {
           return (

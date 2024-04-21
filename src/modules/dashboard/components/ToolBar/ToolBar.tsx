@@ -1,22 +1,34 @@
 'use client';
 import { useState } from 'react';
 import { DateRangePicker, FocusedInputShape } from 'react-dates';
+import moment from 'moment';
 
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
-import { Button, ButtonVariantEnum, Input, useBannerActions } from '@/modules/core';
-import moment from 'moment';
-import { usePeriodActions } from '../../slices';
-import { PeriodType } from '../../types';
+import { Button, ButtonVariantEnum, DialogWrapper, Input } from '@/modules/core';
+import { usePeriodActions } from '@/modules/dashboard/slices';
+import { PeriodType } from '@/modules/dashboard/types';
+import { useTypedSelector } from '@/store';
+import { getDaysBetweenDates, getTotalPeriodAmount } from '../../utils';
 
 const ToolBar = () => {
-  const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
-  const [dateFrom, setDateFrom] = useState<moment.Moment | null>(null);
-  const [dateTo, setDateTo] = useState<moment.Moment | null>(null);
-  const [amount, setAmount] = useState<string>('');
-  const { setPeriod } = usePeriodActions();
+  const { period } = useTypedSelector((state) => state.period);
 
+  const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
+  const [dateFrom, setDateFrom] = useState<moment.Moment | null>(moment(period?.dateStart) || null);
+  const [dateTo, setDateTo] = useState<moment.Moment | null>(moment(period?.dateEnd) || null);
+  const [amount, setAmount] = useState<string | number>(period?.amountOnPeriod || '');
+  const [errors, setErrors] = useState<{ dates?: boolean; amount?: boolean }>();
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+
+  const { setPeriod, resetPeriod } = usePeriodActions();
+
+  const totalAmount = getTotalPeriodAmount(period);
+  const daysBetweenDates = getDaysBetweenDates(
+    dateFrom || period?.dateStart,
+    dateTo || period?.dateEnd,
+  );
   const onDatesChange = ({
     startDate,
     endDate,
@@ -27,7 +39,6 @@ const ToolBar = () => {
     setDateFrom(startDate);
     setDateTo(endDate);
   };
-  const daysBetweenDates = dateTo && dateFrom ? dateTo.diff(dateFrom, 'days') + 1 : 0;
 
   const handleConfirm = () => {
     const datesBetween: moment.Moment[] | null =
@@ -37,13 +48,26 @@ const ToolBar = () => {
           )
         : null;
 
+    if (+amount < 1) {
+      setErrors({ amount: true });
+      return;
+    }
+
+    if (daysBetweenDates < 5) {
+      setErrors({ dates: true });
+      return;
+    }
+
     const periodData: PeriodType = {
+      amountOnPeriod: +amount,
+      dateStart: dateFrom!,
+      dateEnd: dateTo!,
       period:
         datesBetween &&
         `${datesBetween[0].format('YYYY/MM/DD')}-${datesBetween[datesBetween?.length - 1].format('YYYY/MM/DD')}`,
       days: [...Array(daysBetweenDates)].map((_, index) => {
         return {
-          date: datesBetween ? datesBetween[index].format('YYYY/MM/DD') : '',
+          date: datesBetween ? datesBetween[index].format('MM/DD') : '',
           day: datesBetween ? datesBetween[index].format('dddd') : '',
           amountPerDay: +(+amount / daysBetweenDates)?.toFixed(1) || 0,
           expenses: [],
@@ -52,18 +76,35 @@ const ToolBar = () => {
     };
 
     setPeriod({ period: periodData });
-    console.log('%c jordan periodData', 'color: lime;', periodData);
+  };
+
+  const handleResetPeriod = () => {
+    resetPeriod();
   };
 
   return (
     <div className='flex w-full p-3 rounded-md border-2 border-purple-700 justify-between'>
       <div className='flex justify-center items-center'>
-        <span className='text-xl font-medium'>
-          Select the days and amount on the period:{' '}
-          <span className='text-xl font-medium text-purple-950'>
-            {daysBetweenDates ? daysBetweenDates + ' days' : ''}
+        {totalAmount >= 0 ? (
+          <div className='flex'>
+            <span className='text-xl font-medium'>
+              Period -
+              <span className='text-xl font-medium text-purple-950'>
+                {daysBetweenDates ? daysBetweenDates + ' days, ' : ''}
+              </span>
+            </span>
+            <span className='text-xl font-medium'>
+              Total - <span className='text-xl font-medium text-purple-950'>{totalAmount}$</span>
+            </span>
+          </div>
+        ) : (
+          <span className='text-xl font-medium'>
+            Select the days and amount on the period:{' '}
+            <span className='text-xl font-medium text-purple-950'>
+              {daysBetweenDates ? daysBetweenDates + ' days' : ''}
+            </span>
           </span>
-        </span>
+        )}
       </div>
       <div className='flex gap-3'>
         <DateRangePicker
@@ -80,14 +121,60 @@ const ToolBar = () => {
           startDatePlaceholderText='Date from'
           endDatePlaceholderText='Date to'
           customArrowIcon='—'
+          disabled={!!period?.dateStart && !!period?.dateEnd}
         />
-        <Input value={amount} type='number' onChange={(e) => setAmount(e.target.value)} />
-        <Button
-          variant={ButtonVariantEnum.FILLED}
-          text='Save'
-          className='w-50'
-          onClick={handleConfirm}
+        <Input
+          value={period?.amountOnPeriod || amount}
+          type='number'
+          onChange={(e) => setAmount(e.target.value)}
+          error={errors?.amount ? 'enter the amount' : ''}
+          disabled={!!period?.amountOnPeriod}
         />
+        {period.amountOnPeriod ? (
+          <DialogWrapper
+            isOpen={isOpenDialog}
+            onOpenChange={(isOpen) => setIsOpenDialog(isOpen)}
+            openElement={
+              <Button
+                variant={ButtonVariantEnum.OUTLINE}
+                text='Reset Period'
+                className='w-52'
+                onClick={() => {
+                  setIsOpenDialog(true);
+                }}
+              />
+            }>
+            <div className='w-full flex flex-col justify-center items-center p-4 gap-10'>
+              <span className=' w-full text-xl font-semibold text-center'>
+                Do you really wont to reset period?
+              </span>
+              <div className='flex justify-center items-center gap-4'>
+                <Button
+                  variant={ButtonVariantEnum.FILLED}
+                  text='Cancel'
+                  className='w-52'
+                  onClick={() => {
+                    setIsOpenDialog(false);
+                  }}
+                />
+                <Button
+                  variant={ButtonVariantEnum.OUTLINE}
+                  text='Confirm'
+                  className='w-52'
+                  onClick={handleResetPeriod}
+                />
+              </div>
+            </div>
+          </DialogWrapper>
+        ) : (
+          <Button
+            variant={ButtonVariantEnum.FILLED}
+            text='Save'
+            className='w-50'
+            onClick={handleConfirm}
+            isDisabled={!dateTo && !dateFrom && !amount}
+          />
+        )}
       </div>
     </div>
   );
