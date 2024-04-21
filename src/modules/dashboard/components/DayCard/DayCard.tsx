@@ -76,6 +76,14 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                   setIsEditing(false);
                   reset();
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const values = getValues();
+                    updateExpenses(dayIndex, index, { price: +values[inputNamePrice], category });
+                    setIsEditing(false);
+                    reset();
+                  }
+                }}
                 onChange={(e) => {
                   const { value } = e.target as HTMLInputElement;
                   setValue(inputNamePrice, value);
@@ -94,6 +102,14 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                   updateExpenses(dayIndex, index, { price, category: values[inputNameCategory] });
                   setIsEditing(false);
                   reset();
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const values = getValues();
+                    updateExpenses(dayIndex, index, { price, category: values[inputNameCategory] });
+                    setIsEditing(false);
+                    reset();
+                  }
                 }}
                 onChange={(e) => {
                   const { value } = e.target as HTMLInputElement;
