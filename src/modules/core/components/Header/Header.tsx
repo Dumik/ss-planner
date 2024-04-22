@@ -27,8 +27,9 @@ const Header = () => {
           text='Log out'
           size={ButtonSizeEnum.SMALL}
           variant={ButtonVariantEnum.TEXT}
-          onClick={handleLogOut}>
-          <div className='flex items-center'>
+          onClick={handleLogOut}
+          className=''>
+          <div className='flex items-center !w-24'>
             <span>Log out</span>
             <CaretRight size={20} className='fill-purple-700' weight='bold' />
           </div>

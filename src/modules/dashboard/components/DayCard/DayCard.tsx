@@ -143,7 +143,7 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
         <Button
           text='Add line +'
           variant={ButtonVariantEnum.TEXT}
-          className='w-full hover:bg-purple-50 rounded-none rounded-b text-xs disabled:bg-slate-100'
+          className='!w-full hover:bg-purple-50 rounded-none rounded-b text-xs disabled:bg-slate-100'
           type='button'
           onClick={handleAddExpense}
           isDisabled={day.expenses.some(

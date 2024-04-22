@@ -27,7 +27,7 @@ const sizeClasses = {
 const variantClasses = {
   filled: 'bg-purple-700 hover:bg-purple-600 text-white ',
   outline: 'border border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white',
-  text: 'text-purple-700 hover:text-purple-500',
+  text: 'text-purple-700 hover:text-purple-500 w-auto',
 };
 
 const Button: FC<Props> = ({

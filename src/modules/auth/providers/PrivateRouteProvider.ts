@@ -10,15 +10,14 @@ type Props = {
 };
 
 const PrivateRouteProvider: FC<Props> = ({ children }) => {
-  const { accessToken, refreshToken } = useTypedSelector((state) => state.auth);
+  const { accessToken } = useTypedSelector((state) => state.auth);
   const router = useRouter();
   const pathname = usePathname();
 
   const isHomePage = pathname === '/';
   const isUndefinedRoute = /(undefined)/.test(pathname);
-  const isPublicRoute = /(api|auth|_next\/static|_next\/image)/.test(pathname);
-
-  console.log('%c jordan accessToken', 'color: lime;', accessToken);
+  const isPublicRoute =
+    /(api|auth|_next\/static|_next\/image)/.test(pathname) || pathname === '/sign-up';
 
   useEffect(() => {
     if (accessToken) {
@@ -30,7 +29,7 @@ const PrivateRouteProvider: FC<Props> = ({ children }) => {
       router.push('/sign-in');
       return;
     }
-  }, [isPublicRoute, isHomePage, isUndefinedRoute, router, accessToken]);
+  }, [isPublicRoute, isHomePage, isUndefinedRoute, router, accessToken, pathname]);
 
   return children;
 };
