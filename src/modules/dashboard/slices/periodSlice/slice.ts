@@ -4,6 +4,7 @@ import { cloneDeep, omit } from 'lodash';
 
 type PeriodStateType = {
   userId?: string;
+  docId?: string;
   period: PeriodType;
   newExpense: { dayIndex: number } & Expense;
   expense: { dayIndex: number; expenseIndex: number } & Expense;
@@ -46,7 +47,7 @@ export const periodSlice = createSlice({
       state.period = updatedPeriod;
     },
 
-    updateExpenses: (state, action: PayloadAction<Pick<PeriodStateType, 'expense'>>) => {
+    updateExpenses: (state, action: PayloadAction<Pick<PeriodStateType, 'expense' | 'docId'>>) => {
       const updatedPeriod = cloneDeep(state.period);
 
       updatedPeriod.days[action.payload.expense.dayIndex].expenses[

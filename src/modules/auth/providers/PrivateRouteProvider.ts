@@ -25,7 +25,7 @@ const PrivateRouteProvider: FC<Props> = ({ children }) => {
       return;
     }
 
-    if (!isPublicRoute && !isHomePage && !isUndefinedRoute) {
+    if ((!isPublicRoute && !isHomePage && !isUndefinedRoute) || pathname === '/') {
       router.push('/sign-in');
       return;
     }

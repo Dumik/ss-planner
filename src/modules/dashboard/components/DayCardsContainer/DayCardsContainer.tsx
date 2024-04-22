@@ -1,12 +1,12 @@
 'use client';
+import { Fragment, useEffect } from 'react';
 
 import { DayCard } from '@/dashboard/components';
 import { useTypedSelector } from '@/store';
 import { usePeriodActions } from '@/dashboard/slices';
-import { Fragment, useEffect } from 'react';
-import { getTotalPeriodAmount } from '../../utils';
+import { getTotalPeriodAmount } from '@/dashboard/utils';
 import { useAuthUser } from '@/modules/auth';
-import { useFetchPeriodsForUserQuery } from '../../api';
+import { useFetchPeriodsForUserQuery, useUpdatePeriodDocumentMutation } from '@/dashboard/api';
 
 const DayCardsContainer = () => {
   const { user } = useAuthUser();
@@ -16,8 +16,11 @@ const DayCardsContainer = () => {
   const { addPeriodExpense, updateExpenses, setPeriod } = usePeriodActions();
 
   const { data } = useFetchPeriodsForUserQuery(user?.uid);
+  const [updatePeriodMutation] = useUpdatePeriodDocumentMutation();
+
   const onAddExpense = (dayIndex: number, newExpense: { price: number; category: string }) => {
     addPeriodExpense({ newExpense: { ...newExpense, dayIndex } });
+    updatePeriodMutation({ documentId: data?.docId || '', newData: period });
   };
 
   const onUpdateExpenses = (
@@ -26,6 +29,7 @@ const DayCardsContainer = () => {
     value: { price: number; category: string },
   ) => {
     updateExpenses({ expense: { ...value, dayIndex, expenseIndex } });
+    updatePeriodMutation({ documentId: data?.docId || '', newData: period });
   };
 
   const totalAmount = getTotalPeriodAmount(period);

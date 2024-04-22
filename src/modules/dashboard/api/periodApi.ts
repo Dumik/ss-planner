@@ -38,13 +38,11 @@ export const periodApi = createApi({
       },
       providesTags: ['Period'],
     }),
-    updatePeriodDocument: builder.mutation<
-      void,
-      { collectionName: string; documentId: string; newData: any }
-    >({
-      async query({ collectionName, documentId, newData }) {
+    updatePeriodDocument: builder.mutation<void, { documentId: string; newData: any }>({
+      //@ts-ignore
+      async queryFn({ documentId, newData }) {
         try {
-          const documentRef = doc(db, collectionName, documentId);
+          const documentRef = doc(db, 'periods', documentId);
           await updateDoc(documentRef, newData);
           return { data: null };
         } catch (error: any) {
@@ -71,6 +69,7 @@ export const periodApi = createApi({
       invalidatesTags: ['Period'],
     }),
     deletePeriodDocument: builder.mutation<void, { documentId: string }>({
+      //@ts-ignore
       async queryFn({ documentId }) {
         try {
           await deleteDoc(doc(db, 'periods', documentId));

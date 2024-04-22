@@ -24,15 +24,21 @@ const ToolBar = () => {
   const { setPeriod, resetPeriod } = usePeriodActions();
 
   const [createPeriod] = useSavePeriodToFirestoreMutation();
-  const [deletePeriod, { error }] = useDeletePeriodDocumentMutation();
+  const [deletePeriod] = useDeletePeriodDocumentMutation();
+  const { data } = useFetchPeriodsForUserQuery(user?.uid);
+
   const randomId = useId();
+
   const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
-  const [dateFrom, setDateFrom] = useState<moment.Moment | null>(moment(period?.dateStart) || null);
-  const [dateTo, setDateTo] = useState<moment.Moment | null>(moment(period?.dateEnd) || null);
+  const [dateFrom, setDateFrom] = useState<moment.Moment | null>(
+    (period?.dateStart && moment(period?.dateStart)) || null,
+  );
+  const [dateTo, setDateTo] = useState<moment.Moment | null>(
+    (period?.dateEnd && moment(period?.dateEnd)) || null,
+  );
   const [amount, setAmount] = useState<string | number>(period?.amountOnPeriod || '');
   const [errors, setErrors] = useState<{ dates?: boolean; amount?: boolean }>();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
-  const { data } = useFetchPeriodsForUserQuery(user?.uid);
 
   const totalAmount = getTotalPeriodAmount(period);
   const daysBetweenDates = getDaysBetweenDates(
@@ -54,7 +60,7 @@ const ToolBar = () => {
   const handleConfirm = () => {
     const datesBetween: moment.Moment[] | null =
       dateTo && dateFrom
-        ? Array.from({ length: daysBetweenDates }, (_, index) =>
+        ? Array.from({ length: daysBetweenDates! }, (_, index) =>
             moment(dateFrom).add(index, 'days'),
           )
         : null;
@@ -64,7 +70,7 @@ const ToolBar = () => {
       return;
     }
 
-    if (daysBetweenDates < 5) {
+    if (daysBetweenDates! < 5) {
       setErrors({ dates: true });
       return;
     }
@@ -81,7 +87,7 @@ const ToolBar = () => {
         return {
           date: datesBetween ? datesBetween[index].format('MM/DD') : '',
           day: datesBetween ? datesBetween[index].format('dddd') : '',
-          amountPerDay: +(+amount / daysBetweenDates)?.toFixed(1) || 0,
+          amountPerDay: +(+amount / daysBetweenDates!)?.toFixed(1) || 0,
           expenses: [],
         };
       }),
@@ -104,7 +110,7 @@ const ToolBar = () => {
   return (
     <div className='flex w-full p-3 rounded-md border-2 border-purple-700 justify-between'>
       <div className='flex justify-center items-center'>
-        {totalAmount >= 0 && daysBetweenDates ? (
+        {period.amountOnPeriod && totalAmount >= 0 && daysBetweenDates ? (
           <div className='flex'>
             <span className='text-xl font-medium'>
               Period -{' '}
@@ -121,7 +127,7 @@ const ToolBar = () => {
           <span className='text-xl font-medium'>
             Select the days and amount on the period:{' '}
             <span className='text-xl font-medium text-purple-950'>
-              {daysBetweenDates ? daysBetweenDates + ' days' : ''}
+              {daysBetweenDates! > 1 ? daysBetweenDates + ' days' : ''}
             </span>
           </span>
         )}
