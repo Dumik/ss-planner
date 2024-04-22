@@ -1,7 +1,6 @@
 'use client';
 
-import { Logo } from '@/modules/core';
-import { Banner, bannerSignUp } from '@/modules/core/assets/img';
+import { bannerSignUp } from '@/modules/core/assets/img';
 import Image from 'next/image';
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {

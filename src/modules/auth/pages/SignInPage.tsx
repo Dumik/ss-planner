@@ -1,4 +1,4 @@
-import { Button, ButtonSizeEnum, ButtonVariantEnum, Input, Logo } from '@/modules/core';
+import { Button, ButtonSizeEnum, ButtonVariantEnum, Input } from '@/modules/core';
 import { useForm } from 'react-hook-form';
 import { useAuthActions } from '../slices';
 import Image from 'next/image';
