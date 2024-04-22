@@ -11,8 +11,10 @@ import { usePeriodActions } from '@/modules/dashboard/slices';
 import { PeriodType } from '@/modules/dashboard/types';
 import { useTypedSelector } from '@/store';
 import { getDaysBetweenDates, getTotalPeriodAmount } from '../../utils';
+import { useAuthUser } from '@/modules/auth';
 
 const ToolBar = () => {
+  const { user } = useAuthUser();
   const { period } = useTypedSelector((state) => state.period);
   const { setPeriod, resetPeriod } = usePeriodActions();
 
@@ -85,6 +87,8 @@ const ToolBar = () => {
     setAmount('');
     resetPeriod();
   };
+
+  console.log('%c jordan user', 'color: lime;', user);
 
   return (
     <div className='flex w-full p-3 rounded-md border-2 border-purple-700 justify-between'>
