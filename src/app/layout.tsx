@@ -16,6 +16,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log('version:', 0.01);
   return (
     <html lang='en'>
       <body className={inter.className}>
