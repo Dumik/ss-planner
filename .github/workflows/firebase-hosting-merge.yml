@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Create .env file
+        run: echo "NEXT_PUBLIC_UNSPLASH_ACCESS_KEY=${{ secrets.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY }}" > .env
       - run: yarn install --frozen-lockfile && yarn build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
@@ -18,3 +20,4 @@ jobs:
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_SS_PLANNER }}
           channelId: live
           projectId: ss-planner
+
