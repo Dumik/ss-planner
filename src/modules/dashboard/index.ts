@@ -3,4 +3,4 @@ export * from './layouts';
 export * from './components';
 export * from './types';
 export * from './slices';
-export * from './slices';
+export * from './api';

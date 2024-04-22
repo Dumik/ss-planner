@@ -3,13 +3,19 @@
 import { DayCard } from '@/dashboard/components';
 import { useTypedSelector } from '@/store';
 import { usePeriodActions } from '@/dashboard/slices';
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { getTotalPeriodAmount } from '../../utils';
+import { useAuthUser } from '@/modules/auth';
+import { useFetchPeriodsForUserQuery } from '../../api';
 
 const DayCardsContainer = () => {
-  const { period } = useTypedSelector((state) => state.period);
-  const { addPeriodExpense, updateExpenses } = usePeriodActions();
+  const { user } = useAuthUser();
 
+  const { period } = useTypedSelector((state) => state.period);
+  const { accessToken } = useTypedSelector((state) => state.auth);
+  const { addPeriodExpense, updateExpenses, setPeriod } = usePeriodActions();
+
+  const { data } = useFetchPeriodsForUserQuery(user?.uid);
   const onAddExpense = (dayIndex: number, newExpense: { price: number; category: string }) => {
     addPeriodExpense({ newExpense: { ...newExpense, dayIndex } });
   };
@@ -24,10 +30,16 @@ const DayCardsContainer = () => {
 
   const totalAmount = getTotalPeriodAmount(period);
 
+  useEffect(() => {
+    if (data?.period && !period.amountOnPeriod && accessToken) {
+      setPeriod({ period: data?.period });
+    }
+  }, [accessToken, data, period.amountOnPeriod, setPeriod]);
+
   return (
     <div className='grid grid-cols-5 gap-3 items-start'>
       <div className='text-xl text-purple-950 font-semibold'>Total - {totalAmount}</div>
-      {period.days.map((item, index) => {
+      {period?.days?.map((item, index) => {
         if ((index + 1) % 6 === 0 || index === 0) {
           return (
             <Fragment key={`${index}-header`}>

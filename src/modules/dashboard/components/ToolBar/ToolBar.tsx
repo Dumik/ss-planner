@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { DateRangePicker, FocusedInputShape } from 'react-dates';
 import moment from 'moment';
 
@@ -10,25 +10,34 @@ import { Button, ButtonVariantEnum, DialogWrapper, Input } from '@/modules/core'
 import { usePeriodActions } from '@/modules/dashboard/slices';
 import { PeriodType } from '@/modules/dashboard/types';
 import { useTypedSelector } from '@/store';
-import { getDaysBetweenDates, getTotalPeriodAmount } from '../../utils';
+import { getDaysBetweenDates, getTotalPeriodAmount } from '@/dashboard/utils';
 import { useAuthUser } from '@/modules/auth';
+import {
+  useDeletePeriodDocumentMutation,
+  useFetchPeriodsForUserQuery,
+  useSavePeriodToFirestoreMutation,
+} from '@/dashboard/api';
 
 const ToolBar = () => {
   const { user } = useAuthUser();
   const { period } = useTypedSelector((state) => state.period);
   const { setPeriod, resetPeriod } = usePeriodActions();
 
+  const [createPeriod] = useSavePeriodToFirestoreMutation();
+  const [deletePeriod, { error }] = useDeletePeriodDocumentMutation();
+  const randomId = useId();
   const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
   const [dateFrom, setDateFrom] = useState<moment.Moment | null>(moment(period?.dateStart) || null);
   const [dateTo, setDateTo] = useState<moment.Moment | null>(moment(period?.dateEnd) || null);
   const [amount, setAmount] = useState<string | number>(period?.amountOnPeriod || '');
   const [errors, setErrors] = useState<{ dates?: boolean; amount?: boolean }>();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
+  const { data } = useFetchPeriodsForUserQuery(user?.uid);
 
   const totalAmount = getTotalPeriodAmount(period);
   const daysBetweenDates = getDaysBetweenDates(
-    dateFrom || period?.dateStart,
-    dateTo || period?.dateEnd,
+    dateFrom || moment(period?.dateStart),
+    dateTo || moment(period?.dateEnd),
   );
 
   const onDatesChange = ({
@@ -61,9 +70,10 @@ const ToolBar = () => {
     }
 
     const periodData: PeriodType = {
+      id: randomId,
       amountOnPeriod: +amount,
-      dateStart: dateFrom!,
-      dateEnd: dateTo!,
+      dateStart: dateFrom!.format('YYYY/MM/DD'),
+      dateEnd: dateTo!.format('YYYY/MM/DD'),
       period:
         datesBetween &&
         `${datesBetween[0].format('YYYY/MM/DD')}-${datesBetween[datesBetween?.length - 1].format('YYYY/MM/DD')}`,
@@ -78,6 +88,7 @@ const ToolBar = () => {
     };
 
     setPeriod({ period: periodData });
+    createPeriod({ periodData, userId: user?.uid });
     setIsOpenDialog(false);
   };
 
@@ -85,10 +96,10 @@ const ToolBar = () => {
     setDateTo(null);
     setDateFrom(null);
     setAmount('');
+    deletePeriod({ documentId: data?.docId || '' });
     resetPeriod();
+    setIsOpenDialog(false);
   };
-
-  console.log('%c jordan user', 'color: lime;', user);
 
   return (
     <div className='flex w-full p-3 rounded-md border-2 border-purple-700 justify-between'>

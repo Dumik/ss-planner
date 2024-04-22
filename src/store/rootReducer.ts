@@ -1,5 +1,6 @@
 import { authSlice } from '@/modules/auth';
 import bannerSlice from '@/modules/core/slices/bannerSlice/slice';
+import { periodApi } from '@/modules/dashboard/api/periodApi';
 import { periodSlice } from '@/modules/dashboard/slices';
 import { persistCombineReducers } from 'redux-persist';
 import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
@@ -28,4 +29,5 @@ export const rootReducer = persistCombineReducers(persistConfigRoot, {
   auth: authSlice.reducer,
   banner: bannerSlice.reducer,
   period: periodSlice.reducer,
+  [periodApi.reducerPath]: periodApi.reducer,
 });

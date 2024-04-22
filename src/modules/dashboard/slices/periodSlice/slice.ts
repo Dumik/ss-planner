@@ -3,12 +3,14 @@ import { Expense, PeriodType } from '../../types';
 import { cloneDeep, omit } from 'lodash';
 
 type PeriodStateType = {
+  userId?: string;
   period: PeriodType;
   newExpense: { dayIndex: number } & Expense;
   expense: { dayIndex: number; expenseIndex: number } & Expense;
 };
 
 const initialState: PeriodStateType = {
+  userId: '',
   newExpense: {
     dayIndex: 0,
     price: 0,
@@ -21,6 +23,7 @@ const initialState: PeriodStateType = {
     category: '',
   },
   period: {
+    id: '',
     days: [],
   },
 };

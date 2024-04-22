@@ -6,10 +6,14 @@ import { useAuthActions } from '@/modules/auth';
 import { CaretRight } from '@phosphor-icons/react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../../../firebaseConfig';
+import { usePeriodActions } from '@/modules/dashboard';
 
 const Header = () => {
   const { resetAccess } = useAuthActions();
+  const { resetPeriod } = usePeriodActions();
+
   const handleLogOut = () => {
+    resetPeriod();
     resetAccess();
     signOut(auth);
   };
