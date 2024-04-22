@@ -1,7 +1,6 @@
 import { Button, ButtonSizeEnum, ButtonVariantEnum, Input } from '@/modules/core';
 import { useForm } from 'react-hook-form';
 import { useAuthActions } from '../slices';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../../firebaseConfig';

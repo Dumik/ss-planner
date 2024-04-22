@@ -2,7 +2,7 @@
 import { Button, ButtonVariantEnum, InputEmpty } from '@/modules/core';
 import classNames from 'classnames';
 import { Day, Expense } from '../../types';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { omHappy, omSad } from '@/modules/core/assets/img';
 import Image from 'next/image';
