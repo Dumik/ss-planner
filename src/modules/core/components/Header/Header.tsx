@@ -4,11 +4,14 @@ import React from 'react';
 import { Button, ButtonSizeEnum, ButtonVariantEnum, Logo } from '@/modules/core';
 import { useAuthActions } from '@/modules/auth';
 import { CaretRight } from '@phosphor-icons/react';
+import { signOut } from 'firebase/auth';
+import { auth } from '../../../../../firebaseConfig';
 
 const Header = () => {
   const { resetAccess } = useAuthActions();
   const handleLogOut = () => {
     resetAccess();
+    signOut(auth);
   };
   return (
     <header className='h-20 text-white p-1 border-b-2 border-purple-700 fixed w-full bg-white z-10'>
