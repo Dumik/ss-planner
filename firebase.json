@@ -1,5 +1,8 @@
 {
   "hosting": {
+    "predeploy": [
+      "yarn install"
+    ],
     "source": ".",
     "ignore": [
       "firebase.json",
@@ -11,3 +14,4 @@
     }
   }
 }
+
