@@ -43,5 +43,10 @@
     "prettier": "3.2.5",
     "tailwindcss": "^3.4.3",
     "typescript": "^5"
-  }
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": ".prettierrc.js",
+  "author": "dumik <dumik.alive@gmail.com>",
+  "license": "ISC",
+  "repository": "https://github.com/Dumik/ss-planner.git"
 }
