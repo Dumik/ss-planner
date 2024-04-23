@@ -1,10 +1,10 @@
 'use client';
 import { useId, useState } from 'react';
-import { DateRangePicker, FocusedInputShape } from 'react-dates';
+// import { DateRangePicker, FocusedInputShape } from 'react-dates';
 import moment from 'moment';
 
-import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
+// import 'react-dates/initialize';
+// import 'react-dates/lib/css/_datepicker.css';
 
 import { Button, ButtonVariantEnum, DialogWrapper, Input } from '@/modules/core';
 import { usePeriodActions } from '@/modules/dashboard/slices';
@@ -29,7 +29,7 @@ const ToolBar = () => {
 
   const randomId = useId();
 
-  const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
+  // const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
   const [dateFrom, setDateFrom] = useState<moment.Moment | null>(
     (period?.dateStart && moment(period?.dateStart)) || null,
   );
@@ -127,13 +127,14 @@ const ToolBar = () => {
           <span className='text-xl font-medium'>
             Select the days and amount on the period:{' '}
             <span className='text-xl font-medium text-purple-950'>
-              {daysBetweenDates! > 1 ? daysBetweenDates + ' days' : ''}
+              {daysBetweenDates!
+               > 1 ? daysBetweenDates + ' days' : ''}
             </span>
           </span>
         )}
       </div>
       <div className='flex gap-3'>
-        <DateRangePicker
+        {/* <DateRangePicker
           startDate={dateFrom}
           startDateId='start_date_id'
           endDate={dateTo}
@@ -148,7 +149,7 @@ const ToolBar = () => {
           endDatePlaceholderText='Date to'
           customArrowIcon='—'
           disabled={!!period?.dateStart && !!period?.dateEnd}
-        />
+        /> */}
         <Input
           value={period?.amountOnPeriod || amount}
           type='number'
