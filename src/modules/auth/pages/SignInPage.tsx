@@ -4,6 +4,7 @@ import { useAuthActions } from '../slices';
 import { useRouter } from 'next/navigation';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../../firebaseConfig';
+import { GoogleAuth } from '../components';
 
 type SignInFormType = {
   email: string;
@@ -78,6 +79,7 @@ const SignInPage = () => {
         </span>
         <Button type='submit' text='Sign in' fullWith />
       </form>
+      <GoogleAuth buttonText='Sign in with Google' />
     </div>
   );
 };

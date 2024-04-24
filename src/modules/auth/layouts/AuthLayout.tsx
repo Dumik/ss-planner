@@ -13,8 +13,8 @@ const AuthLayout = ({ children }: { children: React.ReactNode }) => {
           className='size-full lg:max-h-screen object-cover max-h-80'
         />
       </div>
-      <div className='col-span-5 h-fit lg:col-span-2 lg:h-full'>
-        <div className='lg:h-full'>{children}</div>
+      <div className='col-span-5 h-fit lg:col-span-2 lg:h-full flex justify-center'>
+        <div className='lg:h-full w-full max-w-96'>{children}</div>
       </div>
     </div>
   );

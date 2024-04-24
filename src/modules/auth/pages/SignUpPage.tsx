@@ -4,6 +4,7 @@ import { useAuthActions } from '../slices';
 import { useRouter } from 'next/navigation';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../../../firebaseConfig';
+import { GoogleAuth } from '../components';
 
 type SignUpFormType = {
   email: string;
@@ -90,6 +91,7 @@ const SignUpPage = () => {
         </span>
         <Button type='submit' text='Sign up' fullWith />
       </form>
+      <GoogleAuth buttonText='Sign up with Google' />
     </div>
   );
 };
