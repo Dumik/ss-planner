@@ -5,16 +5,16 @@ import Image from 'next/image';
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className='grid grid-cols-5 h-full'>
-      <div className='col-span-3'>
+    <div className='grid-cols-5 h-screen lg:grid'>
+      <div className='col-span-5 lg:col-span-3  max-h-80 lg:!max-h-screen'>
         <Image
           alt='Hero Picture'
           src={bannerSignUp}
-          className='size-full max-h-screen object-cover'
+          className='size-full lg:max-h-screen object-cover max-h-80'
         />
       </div>
-      <div className='col-span-2 h-full'>
-        <div className='h-full'>{children}</div>
+      <div className='col-span-5 h-fit lg:col-span-2 lg:h-full'>
+        <div className='lg:h-full'>{children}</div>
       </div>
     </div>
   );
