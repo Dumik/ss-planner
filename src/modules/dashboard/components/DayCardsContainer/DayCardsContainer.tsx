@@ -38,12 +38,12 @@ const DayCardsContainer = () => {
   }, [data?.period.amountOnPeriod, period.amountOnPeriod, isFetching]);
 
   return (
-    <div className='grid grid-cols-5 gap-3 items-start  xl:grid-cols-5 md:grid-cols-6 sm:grid-cols-4'>
+    <div className='grid grid-cols-3 gap-3 items-start xl:grid-cols-5 md:grid-cols-6 sm:grid-cols-4'>
       {period?.days?.map((item, index) => {
-        if ((index + 1) % 6 === 0 || index === 0) {
+        if (index === 0 || (index + 1) % 6 === 0) {
           return (
             <Fragment key={`${index}-header`}>
-              <div className='col-span-5 md:col-span-6 w-full bg-purple-50 p-1 rounded '>
+              <div className='col-span-5 md:col-span-6 xl:col-span-5 w-full bg-purple-50 p-1 rounded '>
                 Cash on the period: {item.amountPerDay * 5}{' '}
               </div>
               <DayCard
