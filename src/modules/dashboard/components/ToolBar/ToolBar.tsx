@@ -37,14 +37,18 @@ const ToolBar = () => {
     (period?.dateEnd && moment(period?.dateEnd)) || null,
   );
   const [amount, setAmount] = useState<string | number>(period?.amountOnPeriod || '');
-  const [errors, setErrors] = useState<{ dates?: boolean; amount?: boolean }>();
+  const [errors, setErrors] = useState<{ amount?: boolean }>();
   const [isOpenDialog, setIsOpenDialog] = useState(false);
+
+  const [isDateError, setIsDateError] = useState('');
 
   const totalAmount = getTotalPeriodAmount(period);
   const daysBetweenDates = getDaysBetweenDates(
     dateFrom || moment(period?.dateStart),
     dateTo || moment(period?.dateEnd),
   );
+
+  const isDateInPast = dateFrom?.isBefore(moment(), 'day');
 
   const onDatesChange = ({
     startDate,
@@ -53,6 +57,14 @@ const ToolBar = () => {
     startDate: moment.Moment | null;
     endDate: moment.Moment | null;
   }) => {
+    if (isDateInPast) {
+      setIsDateError('Start date cannot be in the past');
+    }
+
+    if (!isDateInPast) {
+      setIsDateError('');
+    }
+
     setDateFrom(startDate);
     setDateTo(endDate);
   };
@@ -71,7 +83,7 @@ const ToolBar = () => {
     }
 
     if (daysBetweenDates! < 5) {
-      setErrors({ dates: true });
+      setIsDateError('Minimum 5 days');
       return;
     }
 
@@ -108,8 +120,10 @@ const ToolBar = () => {
     setIsOpenDialog(false);
   };
 
+  console.log('%c jordan isDateError', 'color: lime;', isDateError);
+
   return (
-    <div className='flex flex-col w-full gap-4 p-3 rounded-md border-2 border-purple-700 justify-between xl:flex-row'>
+    <div className='flex flex-col w-full gap-4 p-4 rounded-md border-2 border-purple-700 justify-between xl:flex-row'>
       <div className='flex justify-center items-center w-full xl:justify-start'>
         {period.amountOnPeriod && totalAmount >= 0 && daysBetweenDates ? (
           <div className='flex gap-2 flex-col sm:flex-row items-center justify-center xl:items-start xl:justify-start sm:w-full sm:text-center'>
@@ -134,28 +148,32 @@ const ToolBar = () => {
         )}
       </div>
       <div className='flex flex-col gap-3 justify-center tablet:flex-row w-full xl:justify-end'>
-        <DateRangePicker
-          startDate={dateFrom}
-          startDateId='start_date_id'
-          endDate={dateTo}
-          endDateId='end_date_id'
-          onDatesChange={onDatesChange}
-          focusedInput={focusedInput ? focusedInput : null}
-          onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
-          showClearDates={true}
-          hideKeyboardShortcutsPanel={true}
-          isOutsideRange={() => false}
-          startDatePlaceholderText='Date from'
-          endDatePlaceholderText='Date to'
-          customArrowIcon='—'
-          disabled={!!period?.dateStart && !!period?.dateEnd}
-        />
+        <div className='w-full relative'>
+          <span className='absolute bottom-full text-red-500 text-xs'>{isDateError}</span>
+          <DateRangePicker
+            startDate={dateFrom}
+            startDateId='start_date_id'
+            endDate={dateTo}
+            endDateId='end_date_id'
+            onDatesChange={onDatesChange}
+            focusedInput={focusedInput ? focusedInput : null}
+            onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
+            showClearDates={true}
+            hideKeyboardShortcutsPanel={true}
+            isOutsideRange={() => false}
+            startDatePlaceholderText='Date from'
+            endDatePlaceholderText='Date to'
+            customArrowIcon='—'
+            disabled={!!period?.dateStart && !!period?.dateEnd}
+            isDayBlocked={(date) => date.isBefore(moment(), 'day')}
+          />
+        </div>
         <div className='flex gap-3 w-full'>
           <Input
             value={period?.amountOnPeriod || amount}
             type='number'
             onChange={(e) => setAmount(e.target.value)}
-            error={errors?.amount ? 'enter the amount' : ''}
+            error={errors?.amount ? 'Enter the amount' : ''}
             disabled={!!period?.amountOnPeriod}
             className='xl:!w-auto !w-full'
             fullWith
@@ -205,7 +223,7 @@ const ToolBar = () => {
               text='Generate'
               className='xl:!w-50'
               onClick={handleConfirm}
-              isDisabled={!dateTo && !dateFrom && !amount}
+              isDisabled={!dateTo || !dateFrom || !amount || !!isDateError}
               fullWith
             />
           )}
