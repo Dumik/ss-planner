@@ -108,17 +108,17 @@ const ToolBar = () => {
   };
 
   return (
-    <div className='flex w-full p-3 rounded-md border-2 border-purple-700 justify-between'>
-      <div className='flex justify-center items-center'>
+    <div className='flex flex-col w-full gap-4 p-3 rounded-md border-2 border-purple-700 justify-between xl:flex-row'>
+      <div className='flex justify-center items-center w-full xl:justify-start'>
         {period.amountOnPeriod && totalAmount >= 0 && daysBetweenDates ? (
-          <div className='flex'>
-            <span className='text-xl font-medium'>
+          <div className='flex gap-2 flex-col sm:flex-row items-center justify-center xl:items-start xl:justify-start sm:w-full sm:text-center'>
+            <span className='text-xl font-medium text-nowrap sm:!text-center'>
               Period -{' '}
               <span className='text-xl font-medium text-purple-950'>
                 {daysBetweenDates + ' days, '}
               </span>
             </span>
-            <span className='text-xl font-medium'>
+            <span className='text-xl font-medium text-nowrap  sm:!text-center'>
               Total expenses -{' '}
               <span className='text-xl font-medium text-purple-950'>{totalAmount}$</span>
             </span>
@@ -132,7 +132,7 @@ const ToolBar = () => {
           </span>
         )}
       </div>
-      <div className='flex gap-3'>
+      <div className='flex flex-col gap-3 justify-center tablet:flex-row w-full xl:justify-end'>
         <DateRangePicker
           startDate={dateFrom}
           startDateId='start_date_id'
@@ -149,58 +149,65 @@ const ToolBar = () => {
           customArrowIcon='—'
           disabled={!!period?.dateStart && !!period?.dateEnd}
         />
-        <Input
-          value={period?.amountOnPeriod || amount}
-          type='number'
-          onChange={(e) => setAmount(e.target.value)}
-          error={errors?.amount ? 'enter the amount' : ''}
-          disabled={!!period?.amountOnPeriod}
-        />
-        {period.amountOnPeriod ? (
-          <DialogWrapper
-            isOpen={isOpenDialog}
-            onOpenChange={(isOpen) => setIsOpenDialog(isOpen)}
-            openElement={
-              <Button
-                variant={ButtonVariantEnum.OUTLINE}
-                text='Reset Period'
-                className='w-52'
-                onClick={() => {
-                  setIsOpenDialog(true);
-                }}
-              />
-            }>
-            <div className='w-full flex flex-col justify-center items-center p-4 gap-10'>
-              <span className=' w-full text-xl font-semibold text-center'>
-                Do you really wont to reset period?
-              </span>
-              <div className='flex justify-center items-center gap-4'>
-                <Button
-                  variant={ButtonVariantEnum.FILLED}
-                  text='Cancel'
-                  className='w-52'
-                  onClick={() => {
-                    setIsOpenDialog(false);
-                  }}
-                />
+        <div className='flex gap-3 w-full'>
+          <Input
+            value={period?.amountOnPeriod || amount}
+            type='number'
+            onChange={(e) => setAmount(e.target.value)}
+            error={errors?.amount ? 'enter the amount' : ''}
+            disabled={!!period?.amountOnPeriod}
+            className='xl:!w-auto !w-full'
+            fullWith
+          />
+          {period.amountOnPeriod ? (
+            <DialogWrapper
+              isOpen={isOpenDialog}
+              onOpenChange={(isOpen) => setIsOpenDialog(isOpen)}
+              className='w-full'
+              openElement={
                 <Button
                   variant={ButtonVariantEnum.OUTLINE}
-                  text='Confirm'
-                  className='w-52'
-                  onClick={handleResetPeriod}
+                  text='Reset Period'
+                  fullWith
+                  className='xl:!w-52'
+                  onClick={() => {
+                    setIsOpenDialog(true);
+                  }}
                 />
+              }>
+              <div className='w-full flex flex-col justify-center items-center p-4 gap-10'>
+                <span className=' w-full text-xl font-semibold text-center'>
+                  Do you really wont to reset period?
+                </span>
+                <div className='flex justify-center items-center gap-4'>
+                  <Button
+                    variant={ButtonVariantEnum.FILLED}
+                    text='Cancel'
+                    className='!w-52 min-w-52 w-full'
+                    onClick={() => {
+                      setIsOpenDialog(false);
+                    }}
+                    fullWith
+                  />
+                  <Button
+                    variant={ButtonVariantEnum.OUTLINE}
+                    text='Confirm'
+                    className='w-52'
+                    onClick={handleResetPeriod}
+                  />
+                </div>
               </div>
-            </div>
-          </DialogWrapper>
-        ) : (
-          <Button
-            variant={ButtonVariantEnum.FILLED}
-            text='Save'
-            className='w-50'
-            onClick={handleConfirm}
-            isDisabled={!dateTo && !dateFrom && !amount}
-          />
-        )}
+            </DialogWrapper>
+          ) : (
+            <Button
+              variant={ButtonVariantEnum.FILLED}
+              text='Save'
+              className='w-50'
+              onClick={handleConfirm}
+              isDisabled={!dateTo && !dateFrom && !amount}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

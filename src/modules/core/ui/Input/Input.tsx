@@ -6,14 +6,18 @@ type InputProps = {
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
   placeholder?: string;
+  fullWith?: boolean;
 } & InputHTMLAttributes<HTMLInputElement>;
 
 const Input: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
-  { error, startIcon, placeholder = 'Type here...', endIcon, className, ...props },
+  { error, startIcon, placeholder = 'Type here...', endIcon, className, fullWith, ...props },
   ref,
 ) => {
   return (
-    <div className='relative'>
+    <div
+      className={classNames('relative', {
+        '!w-full': fullWith,
+      })}>
       <div
         className={classNames('flex items-center border rounded-md w-full border-purple-700', {
           'border-red-600': error,

@@ -4,7 +4,6 @@ import { Fragment, useEffect } from 'react';
 import { DayCard } from '@/dashboard/components';
 import { useTypedSelector } from '@/store';
 import { usePeriodActions } from '@/dashboard/slices';
-import { getTotalPeriodAmount } from '@/dashboard/utils';
 import { useAuthUser } from '@/modules/auth';
 import { useFetchPeriodsForUserQuery, useUpdatePeriodDocumentMutation } from '@/dashboard/api';
 
@@ -32,8 +31,6 @@ const DayCardsContainer = () => {
     updatePeriodMutation({ documentId: data?.docId || '', newData: period });
   };
 
-  const totalAmount = getTotalPeriodAmount(period);
-
   useEffect(() => {
     if (data?.period && !period.amountOnPeriod && accessToken) {
       setPeriod({ period: data?.period });
@@ -42,7 +39,6 @@ const DayCardsContainer = () => {
 
   return (
     <div className='grid grid-cols-5 gap-3 items-start'>
-      <div className='text-xl text-purple-950 font-semibold'>Total - {totalAmount}</div>
       {period?.days?.map((item, index) => {
         if ((index + 1) % 6 === 0 || index === 0) {
           return (

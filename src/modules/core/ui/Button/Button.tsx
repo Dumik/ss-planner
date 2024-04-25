@@ -54,7 +54,7 @@ const Button: FC<Props> = ({
       variantClasses[variant],
       {
         'pointer-events-none cursor-not-allowed': isLoading || isSuccessful || isDisabled,
-        'w-full': fullWith,
+        '!w-full': fullWith,
       },
       className,
     )}
