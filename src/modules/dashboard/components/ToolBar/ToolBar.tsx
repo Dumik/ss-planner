@@ -201,10 +201,11 @@ const ToolBar = () => {
           ) : (
             <Button
               variant={ButtonVariantEnum.FILLED}
-              text='Save'
-              className='w-50'
+              text='Generate'
+              className='xl:!w-50'
               onClick={handleConfirm}
               isDisabled={!dateTo && !dateFrom && !amount}
+              fullWith
             />
           )}
         </div>

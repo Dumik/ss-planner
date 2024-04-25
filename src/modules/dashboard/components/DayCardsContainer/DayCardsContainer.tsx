@@ -38,17 +38,17 @@ const DayCardsContainer = () => {
   }, [accessToken, data, period.amountOnPeriod, setPeriod]);
 
   return (
-    <div className='grid grid-cols-5 gap-3 items-start'>
+    <div className='grid grid-cols-5 gap-3 items-start  xl:grid-cols-5 md:grid-cols-6 sm:grid-cols-4'>
       {period?.days?.map((item, index) => {
         if ((index + 1) % 6 === 0 || index === 0) {
           return (
             <Fragment key={`${index}-header`}>
-              <div className='col-span-5 w-full bg-purple-50 p-1 rounded'>
+              <div className='col-span-5 md:col-span-6 w-full bg-purple-50 p-1 rounded '>
                 Cash on the period: {item.amountPerDay * 5}{' '}
               </div>
               <DayCard
                 key={item.date}
-                className='col-span-1'
+                className='xl:col-span-1 sm:col-span-2 col-span-5'
                 day={item}
                 dayIndex={index}
                 onAddExpense={onAddExpense}
@@ -60,7 +60,7 @@ const DayCardsContainer = () => {
         return (
           <DayCard
             key={item.date}
-            className='col-span-1'
+            className='xl:col-span-1 sm:col-span-2 col-span-5'
             day={item}
             dayIndex={index}
             onAddExpense={onAddExpense}
