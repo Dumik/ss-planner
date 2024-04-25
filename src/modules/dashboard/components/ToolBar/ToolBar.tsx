@@ -25,7 +25,7 @@ const ToolBar = () => {
 
   const [createPeriod] = useSavePeriodToFirestoreMutation();
   const [deletePeriod] = useDeletePeriodDocumentMutation();
-  const { data } = useFetchPeriodsForUserQuery(user?.uid);
+  const { data, refetch } = useFetchPeriodsForUserQuery(user?.uid);
 
   const randomId = useId();
 
@@ -104,6 +104,7 @@ const ToolBar = () => {
     setAmount('');
     deletePeriod({ documentId: data?.docId || '' });
     resetPeriod();
+    refetch();
     setIsOpenDialog(false);
   };
 
@@ -179,11 +180,11 @@ const ToolBar = () => {
                 <span className=' w-full text-xl font-semibold text-center'>
                   Do you really wont to reset period?
                 </span>
-                <div className='flex justify-center items-center gap-4'>
+                <div className='flex justify-center items-center gap-4 w-full'>
                   <Button
                     variant={ButtonVariantEnum.FILLED}
                     text='Cancel'
-                    className='!w-52 min-w-52 w-full'
+                    className='min-w-52 w-full'
                     onClick={() => {
                       setIsOpenDialog(false);
                     }}
@@ -192,8 +193,8 @@ const ToolBar = () => {
                   <Button
                     variant={ButtonVariantEnum.OUTLINE}
                     text='Confirm'
-                    className='w-52'
                     onClick={handleResetPeriod}
+                    fullWith
                   />
                 </div>
               </div>

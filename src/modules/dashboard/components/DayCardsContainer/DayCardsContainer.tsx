@@ -14,7 +14,7 @@ const DayCardsContainer = () => {
   const { accessToken } = useTypedSelector((state) => state.auth);
   const { addPeriodExpense, updateExpenses, setPeriod } = usePeriodActions();
 
-  const { data } = useFetchPeriodsForUserQuery(user?.uid);
+  const { data, isFetching } = useFetchPeriodsForUserQuery(user?.uid);
   const [updatePeriodMutation] = useUpdatePeriodDocumentMutation();
 
   const onAddExpense = (dayIndex: number, newExpense: { price: number; category: string }) => {
@@ -32,10 +32,10 @@ const DayCardsContainer = () => {
   };
 
   useEffect(() => {
-    if (data?.period && !period.amountOnPeriod && accessToken) {
+    if (data?.period.amountOnPeriod && !period.amountOnPeriod && accessToken && !isFetching) {
       setPeriod({ period: data?.period });
     }
-  }, [accessToken, data, period.amountOnPeriod, setPeriod]);
+  }, [data?.period.amountOnPeriod, period.amountOnPeriod, isFetching]);
 
   return (
     <div className='grid grid-cols-5 gap-3 items-start  xl:grid-cols-5 md:grid-cols-6 sm:grid-cols-4'>

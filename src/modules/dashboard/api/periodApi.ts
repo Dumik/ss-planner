@@ -53,7 +53,8 @@ export const periodApi = createApi({
       invalidatesTags: ['Period'],
     }),
     savePeriodToFirestore: builder.mutation<void, { userId?: string; periodData?: PeriodType }>({
-      async query({ periodData, userId }) {
+      //@ts-ignore
+      async queryFn({ periodData, userId }) {
         try {
           const docRef = await addDoc(collection(db, 'periods'), {
             ...periodData,
