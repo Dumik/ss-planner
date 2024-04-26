@@ -5,10 +5,9 @@ import { createApi } from 'unsplash-js';
 import Image from 'next/image';
 
 import { DialogWrapper } from '@/core/components';
-import { Input } from '@/core/ui';
+import { Input, Loader } from '@/core/ui';
 import { useBannerActions } from '@/core/slices';
 import { useTypedSelector } from '@/store';
-import { getTotalPeriodAmount } from '@/modules/dashboard/utils';
 
 const unsplash = createApi({
   accessKey: `${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}`,
@@ -24,18 +23,20 @@ type BasicType = {
 
 const PhotoBanner = () => {
   const [photos, setPhotos] = useState<BasicType[] | undefined>();
+  const [isLoading, setIsLoading] = useState(false);
+
   const { setBannerImage } = useBannerActions();
   const { bannerImage } = useTypedSelector((state) => state.banner);
-  const { period } = useTypedSelector((state) => state.period);
-
-  const totalAmount = getTotalPeriodAmount(period);
 
   const searchPhotos = async (query: string) => {
-    const response = await unsplash.search.getPhotos({
-      query,
-      perPage: 20,
-      orientation: 'landscape',
-    });
+    setIsLoading(true);
+    const response = await unsplash.search
+      .getPhotos({
+        query,
+        perPage: 20,
+        orientation: 'landscape',
+      })
+      .finally(() => setIsLoading(false));
     const data = response.response?.results;
     setPhotos(data as SetStateAction<BasicType[] | undefined>);
   };
@@ -53,6 +54,7 @@ const PhotoBanner = () => {
         backgroundPosition: 'center',
       }}>
       <DialogWrapper
+        className='max-w-96'
         openElement={
           <span className='text-sm p-2 bg-white/50 hover:bg-black/20 hover:text-white rounded-md duration-300'>
             Change cover
@@ -62,6 +64,12 @@ const PhotoBanner = () => {
           <span>Search:</span>
           <Input type='text' onChange={(e) => searchPhotos(e.target.value)} />
           <div className='h-96 overflow-y-scroll grid grid-cols-4 gap-1 mt-8'>
+            {!photos?.length && !isLoading ? (
+              <div className='flex col-span-4  items-center flex-col'>
+                <span className='text-lg font-semibold text-slate-400'>Photo not found</span>
+                <span className='text-lg font-semibold text-slate-400'>Type your request</span>
+              </div>
+            ) : null}
             {photos?.map((photo) => (
               <Image
                 key={photo.id}
@@ -73,6 +81,11 @@ const PhotoBanner = () => {
                 onClick={() => handleImage(photo)}
               />
             ))}
+            {isLoading && (
+              <div className='flex col-span-4 justify-center '>
+                <Loader color='#4C1FA7' style={{ width: '60px' }} />
+              </div>
+            )}
           </div>
         </div>
       </DialogWrapper>
