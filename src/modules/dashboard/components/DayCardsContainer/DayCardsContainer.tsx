@@ -6,6 +6,7 @@ import { useTypedSelector } from '@/store';
 import { usePeriodActions } from '@/dashboard/slices';
 import { useAuthUser } from '@/modules/auth';
 import { useFetchPeriodsForUserQuery, useUpdatePeriodDocumentMutation } from '@/dashboard/api';
+import { Loader } from '@/modules/core';
 
 const DayCardsContainer = () => {
   const { user } = useAuthUser();
@@ -14,7 +15,7 @@ const DayCardsContainer = () => {
   const { accessToken } = useTypedSelector((state) => state.auth);
   const { addPeriodExpense, updateExpenses, setPeriod } = usePeriodActions();
 
-  const { data, isFetching } = useFetchPeriodsForUserQuery(user?.uid);
+  const { data, isFetching, isLoading } = useFetchPeriodsForUserQuery(user?.uid);
   const [updatePeriodMutation] = useUpdatePeriodDocumentMutation();
 
   const onAddExpense = (dayIndex: number, newExpense: { price: number; category: string }) => {
@@ -38,7 +39,7 @@ const DayCardsContainer = () => {
   }, [data?.period.amountOnPeriod, period.amountOnPeriod, isFetching]);
 
   return (
-    <div className='grid grid-cols-3 gap-3 items-start xl:grid-cols-5 md:grid-cols-6 sm:grid-cols-4'>
+    <div className='grid grid-cols-3 gap-3 items-start xl:grid-cols-5 md:grid-cols-6 sm:grid-cols-4 w-full'>
       {period?.days?.map((item, index) => {
         if (index === 0 || (index + 1) % 6 === 0) {
           return (
@@ -68,6 +69,11 @@ const DayCardsContainer = () => {
           />
         );
       })}
+      {(isLoading || isFetching) && (
+        <div className='flex justify-center w-screen'>
+          <Loader color='#4C1FA7' style={{ width: '60px' }} />
+        </div>
+      )}
     </div>
   );
 };
