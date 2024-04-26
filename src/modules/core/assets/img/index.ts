@@ -6,3 +6,4 @@ export { default as Error404 } from './404.jpeg';
 export { default as ComingSoon } from './coming_soon.jpeg';
 export { default as SWWrong } from './sww.jpeg';
 export { default as Logo } from './logo.png';
+export { default as User } from './user.png';
