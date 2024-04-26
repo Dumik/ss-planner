@@ -5,10 +5,17 @@ const config: Config = {
   content: ['./src/app/**/*.{js,ts,jsx,tsx,mdx}', './src/modules/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
+      left: {
+        22: '88rem',
+      },
+      spacing: {
+        22: '5.5rem',
+      },
       colors: {
         disabled: {
           100: '#f2f2f2',
         },
+
         purple: {
           50: '#F5E1FF',
           100: '#D1B0FF',

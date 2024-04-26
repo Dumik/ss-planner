@@ -1,5 +1,5 @@
 'use client';
-import { Button, ButtonVariantEnum, InputEmpty } from '@/modules/core';
+import { Autocomplete, Button, ButtonVariantEnum, InputEmpty } from '@/modules/core';
 import classNames from 'classnames';
 import { Day, Expense } from '../../types';
 import { useForm } from 'react-hook-form';
@@ -91,8 +91,8 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                 }}
               />
             </div>
-            <div className='col-span-4  py-2 px-1'>
-              <InputEmpty
+            <div className='col-span-4 py-2 px-1 relative'>
+              <Autocomplete
                 value={isEditing ? watch(inputNameCategory) : watch(inputNameCategory) || category}
                 className='w-full'
                 placeholder='Category'
@@ -103,7 +103,7 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                   setIsEditing(false);
                   reset();
                 }}
-                onKeyDown={(e) => {
+                onKeyDown={(e: any) => {
                   if (e.key === 'Enter') {
                     const values = getValues();
                     updateExpenses(dayIndex, index, { price, category: values[inputNameCategory] });
@@ -111,7 +111,7 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                     reset();
                   }
                 }}
-                onChange={(e) => {
+                onChange={(e: any) => {
                   const { value } = e.target as HTMLInputElement;
                   setValue(inputNameCategory, value);
                   setIsEditing(true);
