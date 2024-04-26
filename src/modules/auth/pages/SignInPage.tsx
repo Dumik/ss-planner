@@ -35,7 +35,7 @@ const SignInPage = () => {
       .catch((error) => {
         // const errorCode = error.code;
         // const errorMessage = error.message;
-        console.log('%c jordan errorCode', 'color: lime;', error);
+        console.log(error);
       });
   };
 

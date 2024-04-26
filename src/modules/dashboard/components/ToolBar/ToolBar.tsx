@@ -1,5 +1,5 @@
 'use client';
-import { useId, useState } from 'react';
+import { useId, useState, useEffect } from 'react';
 import { DateRangePicker, FocusedInputShape } from 'react-dates';
 import moment from 'moment';
 
@@ -120,7 +120,15 @@ const ToolBar = () => {
     setIsOpenDialog(false);
   };
 
-  console.log('%c jordan isDateError', 'color: lime;', isDateError);
+  //META: Init dates
+  useEffect(() => {
+    if (period?.dateStart && !dateFrom) {
+      setDateFrom(moment(period?.dateStart));
+    }
+    if (period?.dateEnd && !dateTo) {
+      setDateTo(moment(period?.dateEnd));
+    }
+  }, [dateFrom, dateTo, period?.dateEnd, period?.dateStart]);
 
   return (
     <div className='flex flex-col w-full gap-4 p-4 rounded-md border-2 border-purple-700 justify-between xl:flex-row'>
