@@ -69,7 +69,7 @@ const DayCardsContainer = () => {
           />
         );
       })}
-      {(isLoading || isFetching) && (
+      {(isLoading || isFetching) && !data?.period.amountOnPeriod && (
         <div className='flex justify-center w-screen'>
           <Loader color='#4C1FA7' style={{ width: '60px' }} />
         </div>

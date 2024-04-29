@@ -86,6 +86,10 @@ const ToolBar = () => {
       setIsDateError('Minimum 5 days');
       return;
     }
+    if (daysBetweenDates! > 31) {
+      setIsDateError('Max 31 days');
+      return;
+    }
 
     const periodData: PeriodType = {
       id: randomId,
@@ -129,6 +133,8 @@ const ToolBar = () => {
       setDateTo(moment(period?.dateEnd));
     }
   }, [dateFrom, dateTo, period?.dateEnd, period?.dateStart]);
+
+  const isMobile = window.innerWidth < 700;
 
   return (
     <div className='flex flex-col w-full gap-4 p-4 rounded-md border-2 border-purple-700 justify-between xl:flex-row'>
@@ -174,6 +180,7 @@ const ToolBar = () => {
             customArrowIcon='—'
             disabled={!!period?.dateStart && !!period?.dateEnd}
             isDayBlocked={(date) => date.isBefore(moment(), 'day')}
+            orientation={isMobile ? 'vertical' : 'horizontal'}
           />
         </div>
         <div className='flex gap-3 w-full'>
@@ -206,7 +213,13 @@ const ToolBar = () => {
                 <span className=' w-full text-xl font-semibold text-center'>
                   Do you really wont to reset period?
                 </span>
-                <div className='flex justify-center items-center gap-4 w-full'>
+                <div className='flex flex-col justify-center items-center gap-4 w-full sm:flex-row'>
+                  <Button
+                    variant={ButtonVariantEnum.OUTLINE}
+                    text='Confirm'
+                    onClick={handleResetPeriod}
+                    fullWith
+                  />
                   <Button
                     variant={ButtonVariantEnum.FILLED}
                     text='Cancel'
@@ -214,12 +227,6 @@ const ToolBar = () => {
                     onClick={() => {
                       setIsOpenDialog(false);
                     }}
-                    fullWith
-                  />
-                  <Button
-                    variant={ButtonVariantEnum.OUTLINE}
-                    text='Confirm'
-                    onClick={handleResetPeriod}
                     fullWith
                   />
                 </div>
