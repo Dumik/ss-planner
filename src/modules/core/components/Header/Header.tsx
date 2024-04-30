@@ -11,20 +11,20 @@ import { signOut } from 'firebase/auth';
 import { auth } from '../../../../../firebaseConfig';
 import { Button, ButtonVariantEnum } from '../../ui';
 import { List, X } from '@phosphor-icons/react';
+import { useBannerActions } from '../../slices';
 
-const navigation = [
-  { name: 'Dashboard', href: '#', current: true },
-  // { name: 'Projects', href: '#', current: false },
-];
+const navigation = [{ name: 'Dashboard', href: '#', current: true }];
 
 const Header = () => {
   const { user } = useAuthUser();
   const { resetAccess } = useAuthActions();
   const { resetPeriod } = usePeriodActions();
+  const { resetBanner } = useBannerActions();
 
   const handleLogOut = () => {
     resetPeriod();
     resetAccess();
+    resetBanner();
     signOut(auth);
   };
 

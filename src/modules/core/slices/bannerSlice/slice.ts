@@ -9,11 +9,14 @@ const initialState: BannerStateType = {
 };
 
 export const bannerSlice = createSlice({
-  name: 'auth',
+  name: 'banner',
   initialState,
   reducers: {
     setBannerImage: (state, action: PayloadAction<Pick<BannerStateType, 'bannerImage'>>) => {
       state.bannerImage = action.payload.bannerImage;
+    },
+    resetBanner: (state) => {
+      Object.assign(state, initialState);
     },
   },
 });

@@ -4,12 +4,16 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import { rootReducer } from './rootReducer';
 import { periodApi } from '@/modules/dashboard/api/periodApi';
+import bannerApi from '@/modules/dashboard/api/bannerApi';
 
 export const reduxStore = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ serializableCheck: false }).concat(periodApi.middleware),
+    getDefaultMiddleware({ serializableCheck: false }).concat(
+      periodApi.middleware,
+      bannerApi.middleware,
+    ),
 });
 
 // Infer the type of makeStore

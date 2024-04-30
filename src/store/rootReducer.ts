@@ -1,5 +1,6 @@
 import { authSlice } from '@/modules/auth';
 import bannerSlice from '@/modules/core/slices/bannerSlice/slice';
+import bannerApi from '@/modules/dashboard/api/bannerApi';
 import { periodApi } from '@/modules/dashboard/api/periodApi';
 import { periodSlice } from '@/modules/dashboard/slices';
 import { persistCombineReducers } from 'redux-persist';
@@ -30,4 +31,5 @@ export const rootReducer = persistCombineReducers(persistConfigRoot, {
   banner: bannerSlice.reducer,
   period: periodSlice.reducer,
   [periodApi.reducerPath]: periodApi.reducer,
+  [bannerApi.reducerPath]: bannerApi.reducer,
 });
