@@ -142,7 +142,7 @@ const PhotoBanner = () => {
             </div>
           </div>
         </DialogWrapper>
-        {data?.docId && (
+        {bannerImage && (
           <button
             className='text-sm p-2 bg-white/50 hover:bg-red-500 hover:text-white rounded-e-md duration-300 cursor-pointer h-[33px] mt-[1px]'
             onClick={handleDelete}>
