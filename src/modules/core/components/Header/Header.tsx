@@ -91,7 +91,13 @@ const Header = () => {
                       <span className='absolute -inset-1.5' />
                       <span className='sr-only'>Open user menu</span>
 
-                      <Image src={User} alt='' className='h-8 w-8' />
+                      <Image
+                        src={user?.photoURL || User}
+                        alt=''
+                        className='h-8 w-8 rounded-full'
+                        width={32}
+                        height={32}
+                      />
                     </Menu.Button>
                   </div>
                   <Transition
