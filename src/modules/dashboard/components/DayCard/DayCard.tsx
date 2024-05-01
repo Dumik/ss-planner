@@ -4,8 +4,6 @@ import classNames from 'classnames';
 import { Day, Expense } from '../../types';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import { omHappy, omSad } from '@/modules/core/assets/img';
-import Image from 'next/image';
 
 type DayCardProps = {
   className?: string;
@@ -131,11 +129,12 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
             })}>
             {totalAmount.toFixed(2)}
           </span>
-          {totalAmount < day.amountPerDay ? (
+          {/* TODO: Add motivation faces*/}
+          {/* {totalAmount < day.amountPerDay ? (
             <Image src={omHappy} alt='' width={30} />
           ) : (
             <Image src={omSad} alt='' width={30} />
-          )}
+          )} */}
         </div>
       )}
 

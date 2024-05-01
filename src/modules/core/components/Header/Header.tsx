@@ -13,7 +13,10 @@ import { Button, ButtonVariantEnum } from '../../ui';
 import { List, X } from '@phosphor-icons/react';
 import { useBannerActions } from '../../slices';
 
-const navigation = [{ name: 'Dashboard', href: '#', current: true }];
+const navigation = [
+  { name: 'Dashboard', href: '/dashboard', current: false },
+  { name: 'Statistic', href: '/dashboard/statistic', current: false },
+];
 
 const Header = () => {
   const { user } = useAuthUser();
