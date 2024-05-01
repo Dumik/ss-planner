@@ -12,6 +12,7 @@ import { auth } from '../../../../../firebaseConfig';
 import { Button, ButtonVariantEnum } from '../../ui';
 import { List, X } from '@phosphor-icons/react';
 import { useBannerActions } from '../../slices';
+import { useRouter } from 'next/navigation';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', current: false },
@@ -19,6 +20,8 @@ const navigation = [
 ];
 
 const Header = () => {
+  const router = useRouter();
+
   const { user } = useAuthUser();
   const { resetAccess } = useAuthActions();
   const { resetPeriod } = usePeriodActions();
@@ -114,6 +117,7 @@ const Header = () => {
                               active ? 'bg-gray-100' : '',
                               'block px-4 py-2 text-sm text-gray-800 font-normal !justify-start hover:bg-gray-100 hover:text-purple-900 rounded-none',
                             )}
+                            onClick={() => router.push('/settings')}
                             fullWith
                           />
                         )}
