@@ -203,7 +203,7 @@ const ToolBar = () => {
                 <span
                   className={classNames(
                     'border border-purple-700 text-purple-700',
-                    ' hover:bg-purple-700 hover:text-white flex items-center justify-center ',
+                    ' hover:bg-purple-700 hover:text-white flex items-center justify-center min-w-32',
                     'rounded-md text-center font-bold transition duration-300 h-12',
                   )}>
                   Reset Period
