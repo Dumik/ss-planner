@@ -1,22 +1,32 @@
 'use client';
+
 import React, { useState } from 'react';
 import Autocomplete from 'react-autocomplete';
-import { Input, InputEmpty } from '../Input';
+
+import { InputEmpty } from '@/core/ui';
 import classNames from 'classnames';
 import { expenseCategories } from '@/modules/dashboard';
 
 const ReactAutocomplete = ({ ...props }) => {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(props.value);
 
   return (
     <div className='w-full'>
       <Autocomplete
         items={expenseCategories}
-        shouldItemRender={(item, value) => item.toLowerCase().indexOf(value.toLowerCase()) > -1}
+        shouldItemRender={(item, value) => {
+          if (typeof value === 'string') {
+            return item.toLowerCase().indexOf(value.toLowerCase()) > -1;
+          }
+          return false;
+        }}
         getItemValue={(item) => item}
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        onSelect={(value) => setValue(value)}
+        onSelect={(value) => {
+          props.onSelect(value);
+          setValue(value);
+        }}
         inputProps={{ ...props }}
         renderInput={(inputProps) => <InputEmpty {...inputProps} />}
         renderMenu={(item) => (

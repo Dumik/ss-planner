@@ -114,6 +114,7 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                   setValue(inputNameCategory, value);
                   setIsEditing(true);
                 }}
+                onSelect={(value: string) => setValue(inputNameCategory, value)}
               />
             </div>
           </div>
