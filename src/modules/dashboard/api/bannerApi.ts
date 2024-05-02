@@ -22,21 +22,26 @@ const bannerApi = createApi({
   keepUnusedDataFor: 0,
 
   endpoints: (builder) => ({
-    fetchBannerForUser: builder.query<{ banner: BannerType; docId: string }, string | void>({
-      //@ts-ignore
+    fetchBannerForUser: builder.query<{ banner: BannerType; docId: string } | null, string | void>({
       async queryFn(userId) {
         try {
-          const q = query(collection(db, 'banners'), where('userId', '==', userId));
-          const querySnapshot = await getDocs(q);
-          let banner: BannerType = {
-            unsplash: '',
-          };
-          let docId: string = '';
-          querySnapshot.forEach((doc) => {
-            docId = doc.id;
-            banner = { unsplash: doc.data()?.unsplash };
-          });
-          return { data: { banner, docId } };
+          if (userId) {
+            const q = query(collection(db, 'banners'), where('userId', '==', userId));
+            const querySnapshot = await getDocs(q);
+            let banner: BannerType = {
+              unsplash: '',
+            };
+            let docId: string = '';
+            querySnapshot.forEach((doc) => {
+              docId = doc.id;
+              banner = { unsplash: doc.data()?.unsplash };
+            });
+            return { data: { banner, docId } };
+          } else {
+            return {
+              data: null,
+            };
+          }
         } catch (error: any) {
           console.error(error.message);
           return { error: error.message };
@@ -45,8 +50,7 @@ const bannerApi = createApi({
       providesTags: ['Banner'],
     }),
 
-    saveBanner: builder.mutation<void, { userId?: string; bannerData?: BannerType }>({
-      //@ts-ignore
+    saveBanner: builder.mutation<void | null, { userId?: string; bannerData?: BannerType }>({
       async queryFn({ bannerData, userId }) {
         try {
           const docRef = await addDoc(collection(db, 'banners'), {
@@ -62,8 +66,7 @@ const bannerApi = createApi({
       },
       invalidatesTags: ['Banner'],
     }),
-    updateBanner: builder.mutation<void, { documentId: string; newData: any }>({
-      //@ts-ignore
+    updateBanner: builder.mutation<void | null, { documentId: string; newData: any }>({
       async queryFn({ documentId, newData }) {
         try {
           const documentRef = doc(db, 'banners', documentId);
@@ -76,8 +79,7 @@ const bannerApi = createApi({
       },
       invalidatesTags: ['Banner'],
     }),
-    deleteBanner: builder.mutation<void, { documentId: string }>({
-      //@ts-ignore
+    deleteBanner: builder.mutation<void | null, { documentId: string }>({
       async queryFn({ documentId }) {
         try {
           await deleteDoc(doc(db, 'banners', documentId));

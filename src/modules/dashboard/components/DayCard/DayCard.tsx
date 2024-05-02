@@ -95,16 +95,18 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                 className='w-full'
                 placeholder='Category'
                 {...register(inputNameCategory, { required: true, value: category })}
-                onBlur={() => {
-                  const values = getValues();
-                  updateExpenses(dayIndex, index, { price, category: values[inputNameCategory] });
+                onBlur={(e: any) => {
+                  const { value } = e.target as HTMLInputElement;
+                  console.log('%c jordan value', 'color: lime;', value);
+                  updateExpenses(dayIndex, index, { price, category: value });
                   setIsEditing(false);
                   reset();
                 }}
                 onKeyDown={(e: any) => {
                   if (e.key === 'Enter') {
-                    const values = getValues();
-                    updateExpenses(dayIndex, index, { price, category: values[inputNameCategory] });
+                    const { value } = e.target as HTMLInputElement;
+                    console.log('%c jordan red', 'color: lime;', value);
+                    updateExpenses(dayIndex, index, { price, category: value });
                     setIsEditing(false);
                     reset();
                   }
@@ -114,6 +116,7 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                   setValue(inputNameCategory, value);
                   setIsEditing(true);
                 }}
+                //@ts-ignore
                 onSelect={(value: string) => setValue(inputNameCategory, value)}
               />
             </div>

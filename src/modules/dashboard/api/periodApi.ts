@@ -16,30 +16,35 @@ export const periodApi = createApi({
   baseQuery: fakeBaseQuery(),
   tagTypes: ['Period'],
   endpoints: (builder) => ({
-    fetchPeriodsForUser: builder.query<{ period: PeriodType; docId: string }, string | void>({
-      async queryFn(userId) {
-        try {
-          const q = query(collection(db, 'periods'), where('userId', '==', userId));
-          const querySnapshot = await getDocs(q);
-          let period: PeriodType = {
-            id: '',
-            days: [],
-          };
-          let docId: string = '';
-          querySnapshot.forEach((doc) => {
-            docId = doc.id;
-            period = { ...doc.data(), id: doc.id } as PeriodType;
-          });
-          return { data: { period, docId } };
-        } catch (error: any) {
-          console.error(error.message);
-          return { error: error.message };
-        }
+    fetchPeriodsForUser: builder.query<{ period: PeriodType; docId: string } | null, string | void>(
+      {
+        async queryFn(userId) {
+          try {
+            if (userId) {
+              const q = query(collection(db, 'periods'), where('userId', '==', userId));
+              const querySnapshot = await getDocs(q);
+              let period: PeriodType = {
+                id: '',
+                days: [],
+              };
+              let docId: string = '';
+              querySnapshot.forEach((doc) => {
+                docId = doc.id;
+                period = { ...doc.data(), id: doc.id } as PeriodType;
+              });
+              return { data: { period, docId } };
+            } else {
+              return { data: null };
+            }
+          } catch (error: any) {
+            console.error(error.message);
+            return { error: error.message };
+          }
+        },
+        providesTags: ['Period'],
       },
-      providesTags: ['Period'],
-    }),
-    updatePeriodDocument: builder.mutation<void, { documentId: string; newData: any }>({
-      //@ts-ignore
+    ),
+    updatePeriodDocument: builder.mutation<void | null, { documentId: string; newData: any }>({
       async queryFn({ documentId, newData }) {
         try {
           const documentRef = doc(db, 'periods', documentId);
@@ -52,8 +57,10 @@ export const periodApi = createApi({
       },
       invalidatesTags: ['Period'],
     }),
-    savePeriodToFirestore: builder.mutation<void, { userId?: string; periodData?: PeriodType }>({
-      //@ts-ignore
+    savePeriodToFirestore: builder.mutation<
+      void | null,
+      { userId?: string; periodData?: PeriodType }
+    >({
       async queryFn({ periodData, userId }) {
         try {
           const docRef = await addDoc(collection(db, 'periods'), {

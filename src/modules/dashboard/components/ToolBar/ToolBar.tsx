@@ -17,6 +17,7 @@ import {
   useFetchPeriodsForUserQuery,
   useSavePeriodToFirestoreMutation,
 } from '@/dashboard/api';
+import classNames from 'classnames';
 
 const ToolBar = () => {
   const { user } = useAuthUser();
@@ -199,15 +200,14 @@ const ToolBar = () => {
               onOpenChange={(isOpen) => setIsOpenDialog(isOpen)}
               className='w-full'
               openElement={
-                <Button
-                  variant={ButtonVariantEnum.OUTLINE}
-                  text='Reset Period'
-                  fullWith
-                  className='xl:!w-52'
-                  onClick={() => {
-                    setIsOpenDialog(true);
-                  }}
-                />
+                <span
+                  className={classNames(
+                    'border border-purple-700 text-purple-700',
+                    ' hover:bg-purple-700 hover:text-white flex items-center justify-center ',
+                    'rounded-md text-center font-bold transition duration-300 h-12',
+                  )}>
+                  Reset Period
+                </span>
               }>
               <div className='w-full flex flex-col justify-center items-center p-4 gap-10'>
                 <span className=' w-full text-xl font-semibold text-center'>
