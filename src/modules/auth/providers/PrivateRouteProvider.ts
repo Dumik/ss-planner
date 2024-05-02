@@ -14,9 +14,9 @@ const PrivateRouteProvider: FC<Props> = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const isHomePage = pathname === '/dashboard';
+  const isHomePage = pathname === '/';
   const isUndefinedRoute = /(undefined)/.test(pathname);
-  const isPublicRoute = pathname === '/sign-up' || pathname === '/sign-in';
+  const isPublicRoute = /(api|auth|_next\/static|_next\/image|\/sign-(in|up))/.test(pathname);
 
   useEffect(() => {
     if (isPublicRoute && accessToken) {
@@ -24,11 +24,14 @@ const PrivateRouteProvider: FC<Props> = ({ children }) => {
       return;
     }
 
-    if (!accessToken) {
+    if (
+      ((!isPublicRoute && !isHomePage && !isUndefinedRoute) || pathname === '/') &&
+      !accessToken
+    ) {
       router.push('/sign-in');
       return;
     }
-  }, [isPublicRoute, isHomePage, isUndefinedRoute, router, accessToken, pathname]);
+  }, [isPublicRoute, isHomePage, isUndefinedRoute, accessToken, pathname]);
 
   return children;
 };
