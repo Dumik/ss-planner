@@ -72,7 +72,7 @@ const SignInPage = () => {
             text='Sign up'
             size={ButtonSizeEnum.SMALL}
             variant={ButtonVariantEnum.TEXT}
-            className='p-0 w-12'
+            className='p-0 w-12 whitespace-nowrap text-nowrap'
             type='button'
             onClick={handleSignUp}
           />

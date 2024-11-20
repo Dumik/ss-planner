@@ -41,15 +41,15 @@ const ReactAutocomplete = forwardRef<HTMLInputElement, ReactAutocompleteProps>(
           renderMenu={(item, value) => (
             <div
               key={value}
-              className='absolute bg-white shadow !max-h-40 w-full mt-2 -ml-1 overflow-hidden overflow-y-visible shadow-purple-100 z-10'>
+              className='absolute bg-white shadow !max-h-40 w-full mt-2 -ml-1 overflow-hidden overflow-y-visible shadow-slate-100 z-10'>
               {item}
             </div>
           )}
           renderItem={(item, isHighlighted) => (
             <div
               key={item}
-              className={classNames('bg-white px-4 py-2 w-full hover:bg-purple-50 cursor-pointer', {
-                '!bg-purple-50': isHighlighted,
+              className={classNames('bg-white px-4 py-2 w-full hover:bg-slate-50 cursor-pointer', {
+                '!bg-slate-100': isHighlighted,
               })}>
               {item}
             </div>

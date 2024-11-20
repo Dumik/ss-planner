@@ -6,7 +6,7 @@ import moment from 'moment';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
-import { Button, ButtonVariantEnum, DialogWrapper, Input } from '@/modules/core';
+import { Button, ButtonSizeEnum, ButtonVariantEnum, DialogWrapper, Input } from '@/modules/core';
 import { usePeriodActions } from '@/modules/dashboard/slices';
 import { PeriodType } from '@/modules/dashboard/types';
 import { useTypedSelector } from '@/store';
@@ -18,6 +18,7 @@ import {
   useSavePeriodToFirestoreMutation,
 } from '@/dashboard/api';
 import classNames from 'classnames';
+import { InputSizeEnum } from '@/modules/core/ui/Input/types';
 
 const ToolBar = () => {
   const { user } = useAuthUser();
@@ -138,76 +139,83 @@ const ToolBar = () => {
   const isMobile = window.innerWidth < 700;
 
   return (
-    <div className='flex flex-col w-full gap-4 p-4 rounded-md border-2 border-purple-700 justify-between xl:flex-row'>
+    <div className='flex flex-col w-full gap-4 p-3 rounded-md  justify-between xl:flex-row bg-white'>
       <div className='flex justify-center items-center w-full xl:justify-start'>
         {period.amountOnPeriod && totalAmount >= 0 && daysBetweenDates ? (
           <div className='flex gap-2 flex-col sm:flex-row items-center justify-center xl:items-start xl:justify-start sm:w-full sm:text-center'>
-            <span className='text-xl font-medium text-nowrap sm:!text-center'>
+            <span className='text-lg font-light text-nowrap sm:!text-center'>
               Period -{' '}
-              <span className='text-xl font-medium text-purple-950'>
+              <span className='text-lg  text-gray-900 font-medium'>
                 {daysBetweenDates + ' days, '}
               </span>
             </span>
-            <span className='text-xl font-medium text-nowrap  sm:!text-center'>
+            <span className='text-lg font-light text-nowrap  sm:!text-center'>
               Total expenses -{' '}
-              <span className='text-xl font-medium text-purple-950'>{totalAmount}$</span>
+              <span className='text-lg font-medium text-gray-900'>{totalAmount}</span>
             </span>
           </div>
         ) : (
-          <span className='text-xl font-medium'>
+          <span className='text-lg font-light'>
             Select the days and amount on the period:{' '}
-            <span className='text-xl font-medium text-purple-950'>
+            <span className='text-lg font-medium text-gray-900 '>
               {daysBetweenDates! > 1 ? daysBetweenDates + ' days' : ''}
             </span>
           </span>
         )}
       </div>
       <div className='flex flex-col gap-3 justify-center tablet:flex-row w-full xl:justify-end'>
-        <div className='w-full relative'>
-          <span className='absolute bottom-full text-red-500 text-xs'>{isDateError}</span>
-          <DateRangePicker
-            startDate={dateFrom}
-            startDateId='start_date_id'
-            endDate={dateTo}
-            endDateId='end_date_id'
-            onDatesChange={onDatesChange}
-            focusedInput={focusedInput ? focusedInput : null}
-            onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
-            showClearDates={true}
-            hideKeyboardShortcutsPanel={true}
-            isOutsideRange={() => false}
-            startDatePlaceholderText='Date from'
-            endDatePlaceholderText='Date to'
-            customArrowIcon='—'
-            disabled={!!period?.dateStart && !!period?.dateEnd}
-            isDayBlocked={(date) => date.isBefore(moment(), 'day')}
-            orientation={isMobile ? 'vertical' : 'horizontal'}
-          />
-        </div>
+        {!!period?.amountOnPeriod ? (
+          <div className='w-full relative'></div>
+        ) : (
+          <div className='w-full relative'>
+            <span className='absolute bottom-full text-red-500 text-xs'>{isDateError}</span>
+            <DateRangePicker
+              startDate={dateFrom}
+              startDateId='start_date_id'
+              endDate={dateTo}
+              endDateId='end_date_id'
+              onDatesChange={onDatesChange}
+              focusedInput={focusedInput ? focusedInput : null}
+              onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
+              showClearDates={true}
+              hideKeyboardShortcutsPanel={true}
+              isOutsideRange={() => false}
+              startDatePlaceholderText='Date from'
+              endDatePlaceholderText='Date to'
+              customArrowIcon='—'
+              disabled={!!period?.dateStart && !!period?.dateEnd}
+              isDayBlocked={(date) => date.isBefore(moment(), 'day')}
+              orientation={isMobile ? 'vertical' : 'horizontal'}
+            />
+          </div>
+        )}
         <div className='flex gap-3 w-full'>
-          <Input
-            value={period?.amountOnPeriod || amount}
-            type='number'
-            onChange={(e) => setAmount(e.target.value)}
-            error={errors?.amount ? 'Enter the amount' : ''}
-            disabled={!!period?.amountOnPeriod}
-            className='xl:!w-auto !w-full'
-            fullWith
-          />
+          {!!period?.amountOnPeriod ? (
+            <div className='w-full relative'></div>
+          ) : (
+            <Input
+              value={period?.amountOnPeriod || amount}
+              type='number'
+              onChange={(e) => setAmount(e.target.value)}
+              error={errors?.amount ? 'Enter the amount' : ''}
+              disabled={!!period?.amountOnPeriod}
+              className='xl:!w-auto !w-full'
+              fullWith
+            />
+          )}
           {period.amountOnPeriod ? (
             <DialogWrapper
               isOpen={isOpenDialog}
               onOpenChange={(isOpen) => setIsOpenDialog(isOpen)}
               className='w-full'
               openElement={
-                <span
-                  className={classNames(
-                    'border border-purple-700 text-purple-700',
-                    ' hover:bg-purple-700 hover:text-white flex items-center justify-center min-w-32',
-                    'rounded-md text-center font-bold transition duration-300 h-12',
-                  )}>
-                  Reset Period
-                </span>
+                <Button
+                  variant={ButtonVariantEnum.OUTLINE}
+                  text='Reset'
+                  size={ButtonSizeEnum.MEDIUM}
+                  isDisabled={!dateTo || !dateFrom || !amount || !!isDateError}
+                  fullWith
+                />
               }>
               <div className='w-full flex flex-col justify-center items-center p-4 gap-10'>
                 <span className=' w-full text-xl font-semibold text-center'>
@@ -236,8 +244,8 @@ const ToolBar = () => {
             <Button
               variant={ButtonVariantEnum.FILLED}
               text='Generate'
-              className='xl:!w-50'
               onClick={handleConfirm}
+              size={ButtonSizeEnum.MEDIUM}
               isDisabled={!dateTo || !dateFrom || !amount || !!isDateError}
               fullWith
             />

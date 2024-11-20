@@ -44,8 +44,8 @@ const DayCardsContainer = () => {
         if (index === 0 || (index + 1) % 6 === 0) {
           return (
             <Fragment key={`${index}-header`}>
-              <div className='col-span-5 md:col-span-6 xl:col-span-5 w-full bg-purple-50 p-1 rounded '>
-                Cash on the period: {item.amountPerDay * 5}{' '}
+              <div className='col-span-5 md:col-span-6 xl:col-span-5 w-full bg-gray-100 p-1 rounded '>
+                Cash on the period: <span className='font-bold'>{item.amountPerDay * 5} </span>
               </div>
               <DayCard
                 key={item.date}

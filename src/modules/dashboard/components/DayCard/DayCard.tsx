@@ -1,5 +1,11 @@
 'use client';
-import { Autocomplete, Button, ButtonVariantEnum, InputEmpty } from '@/modules/core';
+import {
+  Autocomplete,
+  Button,
+  ButtonSizeEnum,
+  ButtonVariantEnum,
+  InputEmpty,
+} from '@/modules/core';
 import classNames from 'classnames';
 import { Day, Expense } from '../../types';
 import { useForm } from 'react-hook-form';
@@ -44,15 +50,18 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
   const totalAmount = day.expenses.reduce((total, expense) => total + expense.price, 0);
 
   return (
-    <div className={classNames('w-full border-2 border-purple-50 rounded-md', className)}>
-      <span className='flex justify-center items-center p-2 font-semibold text-sm bg-purple-50/50 text-purple-950 uppercase'>
-        {`${day.date} - ${day.day} - ${day.amountPerDay}`}
-      </span>
+    <div className={classNames('w-full rounded-lg shadow-md bg-white', className)}>
+      <div className='flex justify-between items-center px-4 py-2 bg-gray-50 text-gray-700 rounded-t-lg'>
+        <span className='font-semibold text-sm'>{`${day.date}`}</span>
+        <span className='text-xs text-gray-500'>Budget: {day.amountPerDay.toFixed(2)}</span>
+      </div>
+
       {!day.expenses.length && (
-        <div className='flex justify-center items-center h-12'>
-          <span className='font-semibold text-xs text-purple-950'>No costs today</span>
+        <div className='flex justify-center items-center py-4 text-gray-500'>
+          <span className='text-sm'>No expenses for this day</span>
         </div>
       )}
+
       {day.expenses.map(({ price, category }, index) => {
         const inputNamePrice = `price-${dayIndex}-${index}`;
         const inputNameCategory = `category-${dayIndex}-${index}`;
@@ -60,11 +69,11 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
         return (
           <div
             key={`${price}-${category}-${index}`}
-            className='items-center border-t border-purple-50  grid grid-cols-6'>
-            <div className='col-span-2 border-r border-purple-50 py-2 px-1'>
+            className='grid grid-cols-6 items-center gap-2 px-4 py-2 border-b last:border-none'>
+            <div className='col-span-2'>
               <InputEmpty
                 value={isEditing ? watch(inputNamePrice) : watch(inputNamePrice) || price}
-                className='w-full'
+                className='w-full text-sm p-2 rounded border-gray-300 focus:ring focus:ring-indigo-200'
                 placeholder='Sum'
                 type='number'
                 {...register(inputNamePrice, { required: true, value: price })}
@@ -89,15 +98,14 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                 }}
               />
             </div>
-            <div className='col-span-4 py-2 px-1 relative'>
+            <div className='col-span-4 relative'>
               <Autocomplete
                 value={isEditing ? watch(inputNameCategory) : watch(inputNameCategory) || category}
-                className='w-full'
+                className='w-full text-sm p-2 rounded border-gray-300 focus:ring focus:ring-indigo-200'
                 placeholder='Category'
                 {...register(inputNameCategory, { required: true, value: category })}
                 onBlur={(e: any) => {
                   const { value } = e.target as HTMLInputElement;
-                  console.log('%c jordan value', 'color: lime;', value);
                   updateExpenses(dayIndex, index, { price, category: value });
                   setIsEditing(false);
                   reset();
@@ -105,7 +113,6 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
                 onKeyDown={(e: any) => {
                   if (e.key === 'Enter') {
                     const { value } = e.target as HTMLInputElement;
-                    console.log('%c jordan red', 'color: lime;', value);
                     updateExpenses(dayIndex, index, { price, category: value });
                     setIsEditing(false);
                     reset();
@@ -125,30 +132,25 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
       })}
 
       {!!totalAmount && (
-        <div className='flex justify-center items-center h-12 border-t border-purple-50 gap-2'>
+        <div className='flex justify-between items-center px-4 py-2 bg-gray-50 text-gray-700'>
           <span
-            className={classNames('font-semibold text-base text-purple-950', {
-              'text-red-500': totalAmount > day.amountPerDay,
+            className={classNames('font-semibold text-base', {
+              'text-red-600': totalAmount > day.amountPerDay,
               'text-green-600': totalAmount < day.amountPerDay,
             })}>
-            {totalAmount.toFixed(2)}
+            Total: {totalAmount.toFixed(2)}
           </span>
-          {/* TODO: Add motivation faces*/}
-          {/* {totalAmount < day.amountPerDay ? (
-            <Image src={omHappy} alt='' width={30} />
-          ) : (
-            <Image src={omSad} alt='' width={30} />
-          )} */}
         </div>
       )}
 
-      <div className='border-t border-purple-50'>
+      <div className='px-4 py-2'>
         <Button
-          text='Add line +'
-          variant={ButtonVariantEnum.TEXT}
-          className='!w-full hover:bg-purple-50 rounded-none rounded-b text-xs disabled:bg-slate-100'
+          text='Add Expense +'
+          variant={ButtonVariantEnum.FILLED}
+          className='w-full text-sm py-2'
           type='button'
           onClick={handleAddExpense}
+          size={ButtonSizeEnum.SMALL}
           isDisabled={day.expenses.some(
             (item, index) => index === day.expenses.length - 1 && item.price === 0,
           )}

@@ -39,8 +39,6 @@ const SignUpPage = () => {
         });
       })
       .catch((error) => {
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
         console.log(error);
       });
   };
@@ -84,7 +82,7 @@ const SignUpPage = () => {
             text='Sign In'
             size={ButtonSizeEnum.SMALL}
             variant={ButtonVariantEnum.TEXT}
-            className='p-0 w-14'
+            className='p-0 w-14 whitespace-nowrap text-nowrap'
             type='button'
             onClick={handleSignIn}
           />

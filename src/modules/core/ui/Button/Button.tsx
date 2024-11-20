@@ -19,15 +19,16 @@ type Props = {
 } & PropsWithChildren;
 
 const sizeClasses = {
-  large: 'px-4 py-3',
-  medium: 'px-3 py-2',
-  small: 'p-1',
+  large: 'px-6 py-3 text-base',
+  medium: 'px-4 py-2 text-sm',
+  small: 'px-3 py-1 text-xs',
 };
 
 const variantClasses = {
-  filled: 'bg-purple-700 hover:bg-purple-600 text-white ',
-  outline: 'border border-purple-700 text-purple-700 hover:bg-purple-700 hover:text-white',
-  text: 'text-purple-700 hover:text-purple-500 w-auto',
+  [ButtonVariantEnum.FILLED]: 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500',
+  [ButtonVariantEnum.OUTLINE]:
+    'border border-indigo-600 text-indigo-600 hover:bg-indigo-100 focus:ring-indigo-400',
+  [ButtonVariantEnum.TEXT]: 'text-indigo-600 hover:text-indigo-500 focus:ring-indigo-300',
 };
 
 const Button: FC<Props> = ({
@@ -36,39 +37,46 @@ const Button: FC<Props> = ({
   onClick,
   variant = ButtonVariantEnum.FILLED,
   size = ButtonSizeEnum.LARGE,
-  isDisabled,
-  isLoading,
-  loadingText,
-  isSuccessful,
-  successfulText,
+  isDisabled = false,
+  isLoading = false,
+  loadingText = 'Loading...',
+  isSuccessful = false,
+  successfulText = 'Success!',
   successfulIcon,
-  fullWith,
+  fullWith = false,
   children,
-  type,
-}) => (
-  <button
-    type={type}
-    className={classNames(
-      'flex items-center justify-center rounded-md text-center font-bold transition duration-300 w-32',
-      sizeClasses[size],
-      variantClasses[variant],
-      {
-        'cursor-not-allowed': isLoading || isSuccessful || isDisabled,
-        '!w-full': fullWith,
-      },
-      className,
-    )}
-    onClick={onClick}
-    disabled={isDisabled}>
-    {isLoading && <>{loadingText}</>}
-    {isSuccessful && (
-      <>
-        {successfulIcon}
-        {successfulText}
-      </>
-    )}
-    {!isLoading && !isSuccessful && (children || text)}
-  </button>
-);
+  type = 'button',
+}) => {
+  return (
+    <button
+      type={type}
+      className={classNames(
+        'flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
+        sizeClasses[size],
+        variantClasses[variant],
+        {
+          'cursor-not-allowed opacity-50': isLoading || isSuccessful || isDisabled,
+          'w-full': fullWith,
+        },
+        className,
+      )}
+      onClick={onClick}
+      disabled={isDisabled || isLoading || isSuccessful}>
+      {isLoading ? (
+        <span className='flex items-center gap-2'>
+          <span className='w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin'></span>
+          {loadingText}
+        </span>
+      ) : isSuccessful ? (
+        <span className='flex items-center gap-2'>
+          {successfulIcon}
+          {successfulText}
+        </span>
+      ) : (
+        children || text
+      )}
+    </button>
+  );
+};
 
 export default Button;
