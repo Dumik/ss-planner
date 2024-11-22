@@ -43,7 +43,7 @@ const DayCardsContainer = () => {
       {period?.days?.map((item, index) => {
         if (index === 0 || (index + 1) % 6 === 0) {
           return (
-            <Fragment key={`${index}-header`}>
+            <Fragment key={`${index}-header${item.date}`}>
               <div className='col-span-5 md:col-span-6 xl:col-span-5 w-full bg-gray-100 p-1 rounded '>
                 Cash on the period: <span className='font-bold'>{item.amountPerDay * 5} </span>
               </div>

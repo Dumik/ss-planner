@@ -36,7 +36,6 @@ const Header = () => {
     resetBanner();
     signOut(auth);
   };
-  console.log('%c jordan pathname', 'color: lime;', pathname);
   return (
     <Disclosure as='nav' className='bg-white  border-b fixed w-full shadow'>
       {({ open }) => (
@@ -156,9 +155,10 @@ const Header = () => {
           <Disclosure.Panel className='sm:hidden absolute w-full bg-white border-purple-700 border-b '>
             <div className='space-y-1 px-2 pb-3 pt-4 flex flex-col gap-2'>
               {navigation.map((item) => (
-                <Disclosure.Button aria-current={item.current ? 'page' : undefined}>
+                <Disclosure.Button
+                  key={`${item.name}-${item.href}-${item.current}`}
+                  aria-current={item.current ? 'page' : undefined}>
                   <Button
-                    key={item.name}
                     onClick={() => router.push(item.href)}
                     variant={ButtonVariantEnum.TEXT}
                     size={ButtonSizeEnum.MEDIUM}

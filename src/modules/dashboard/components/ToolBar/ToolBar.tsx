@@ -18,7 +18,6 @@ import {
   useSavePeriodToFirestoreMutation,
 } from '@/dashboard/api';
 import classNames from 'classnames';
-import { InputSizeEnum } from '@/modules/core/ui/Input/types';
 
 const ToolBar = () => {
   const { user } = useAuthUser();
@@ -139,7 +138,13 @@ const ToolBar = () => {
   const isMobile = window.innerWidth < 700;
 
   return (
-    <div className='flex flex-col w-full gap-4 p-3 rounded-md  justify-between xl:flex-row bg-white'>
+    <div
+      className={classNames(
+        'flex flex-col w-full gap-4 p-3 rounded-md  justify-between xl:flex-row bg-white',
+        {
+          'sm:flex-row': !!period?.amountOnPeriod,
+        },
+      )}>
       <div className='flex justify-center items-center w-full xl:justify-start'>
         {period.amountOnPeriod && totalAmount >= 0 && daysBetweenDates ? (
           <div className='flex gap-2 flex-col sm:flex-row items-center justify-center xl:items-start xl:justify-start sm:w-full sm:text-center'>
@@ -165,7 +170,7 @@ const ToolBar = () => {
       </div>
       <div className='flex flex-col gap-3 justify-center tablet:flex-row w-full xl:justify-end'>
         {!!period?.amountOnPeriod ? (
-          <div className='w-full relative'></div>
+          <div className='w-full relative hidden xl:block'></div>
         ) : (
           <div className='w-full relative'>
             <span className='absolute bottom-full text-red-500 text-xs'>{isDateError}</span>
@@ -191,7 +196,7 @@ const ToolBar = () => {
         )}
         <div className='flex gap-3 w-full'>
           {!!period?.amountOnPeriod ? (
-            <div className='w-full relative'></div>
+            <div className='w-full relative hidden xl:block'></div>
           ) : (
             <Input
               value={period?.amountOnPeriod || amount}
@@ -207,15 +212,20 @@ const ToolBar = () => {
             <DialogWrapper
               isOpen={isOpenDialog}
               onOpenChange={(isOpen) => setIsOpenDialog(isOpen)}
-              className='w-full'
+              className='w-full flex justify-center items-center'
               openElement={
-                <Button
-                  variant={ButtonVariantEnum.OUTLINE}
-                  text='Reset'
-                  size={ButtonSizeEnum.MEDIUM}
-                  isDisabled={!dateTo || !dateFrom || !amount || !!isDateError}
-                  fullWith
-                />
+                <span
+                  className={classNames(
+                    'flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
+                    'border border-indigo-600 text-indigo-600 hover:bg-indigo-100 focus:ring-indigo-400 px-4 py-2 text-sm max-w-80 w-full',
+                    {
+                      'cursor-not-allowed opacity-50':
+                        !dateTo || !dateFrom || !amount || !!isDateError,
+                      'w-full': true,
+                    },
+                  )}>
+                  Reset
+                </span>
               }>
               <div className='w-full flex flex-col justify-center items-center p-4 gap-10'>
                 <span className=' w-full text-xl font-semibold text-center'>

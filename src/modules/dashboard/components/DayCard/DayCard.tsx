@@ -68,7 +68,7 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
 
         return (
           <div
-            key={`${price}-${category}-${index}`}
+            key={`${price}-${category}-${day.date}`}
             className='grid grid-cols-6 items-center gap-2 px-4 py-2 border-b last:border-none'>
             <div className='col-span-2'>
               <InputEmpty
