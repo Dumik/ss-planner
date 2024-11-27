@@ -2,7 +2,11 @@
 import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  content: ['./src/app/**/*.{js,ts,jsx,tsx,mdx}', './src/modules/**/*.{js,ts,jsx,tsx,mdx}'],
+  content: [
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/modules/**/*.{js,ts,jsx,tsx,mdx}',
+    './node_modules/react-tailwindcss-datepicker/dist/index.esm.js',
+  ],
   theme: {
     extend: {
       left: {

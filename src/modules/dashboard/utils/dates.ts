@@ -1,11 +1,8 @@
-import moment from 'moment';
+import { differenceInCalendarDays, isValid } from 'date-fns';
 
-export const getDaysBetweenDates = (
-  startDate?: moment.Moment,
-  endDate?: moment.Moment,
-): number | null => {
-  if (endDate && endDate) {
-    return moment(endDate).diff(moment(startDate), 'days') + 1;
+export const getDaysBetweenDates = (startDate?: Date, endDate?: Date): number | null => {
+  if (startDate && endDate && isValid(startDate) && isValid(endDate)) {
+    return differenceInCalendarDays(endDate, startDate) + 1;
   }
   return null;
 };

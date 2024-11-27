@@ -1,10 +1,7 @@
 'use client';
 import { useId, useState, useEffect } from 'react';
-import { DateRangePicker, FocusedInputShape } from 'react-dates';
-import moment from 'moment';
-
-import 'react-dates/initialize';
-import 'react-dates/lib/css/_datepicker.css';
+import { addDays, format, isBefore, startOfDay } from 'date-fns';
+import Datepicker, { DateValueType } from 'react-tailwindcss-datepicker';
 
 import { Button, ButtonSizeEnum, ButtonVariantEnum, DialogWrapper, Input } from '@/modules/core';
 import { usePeriodActions } from '@/modules/dashboard/slices';
@@ -30,12 +27,11 @@ const ToolBar = () => {
 
   const randomId = useId();
 
-  const [focusedInput, setFocusedInput] = useState<FocusedInputShape | null>(null);
-  const [dateFrom, setDateFrom] = useState<moment.Moment | null>(
-    (period?.dateStart && moment(period?.dateStart)) || null,
+  const [dateFrom, setDateFrom] = useState<Date | null>(
+    (period?.dateStart && new Date(period?.dateStart)) || null,
   );
-  const [dateTo, setDateTo] = useState<moment.Moment | null>(
-    (period?.dateEnd && moment(period?.dateEnd)) || null,
+  const [dateTo, setDateTo] = useState<Date | null>(
+    (period?.dateEnd && new Date(period?.dateEnd)) || null,
   );
   const [amount, setAmount] = useState<string | number>(period?.amountOnPeriod || '');
   const [errors, setErrors] = useState<{ amount?: boolean }>();
@@ -45,18 +41,18 @@ const ToolBar = () => {
 
   const totalAmount = getTotalPeriodAmount(period);
   const daysBetweenDates = getDaysBetweenDates(
-    dateFrom || moment(period?.dateStart),
-    dateTo || moment(period?.dateEnd),
+    dateFrom || new Date(period?.dateStart || ''),
+    dateTo || new Date(period?.dateEnd || ''),
   );
 
-  const isDateInPast = dateFrom?.isBefore(moment(), 'day');
+  const isDateInPast = dateFrom ? isBefore(startOfDay(dateFrom), startOfDay(new Date())) : false;
 
   const onDatesChange = ({
     startDate,
     endDate,
   }: {
-    startDate: moment.Moment | null;
-    endDate: moment.Moment | null;
+    startDate: Date | null;
+    endDate: Date | null;
   }) => {
     if (isDateInPast) {
       setIsDateError('Start date cannot be in the past');
@@ -71,11 +67,9 @@ const ToolBar = () => {
   };
 
   const handleConfirm = () => {
-    const datesBetween: moment.Moment[] | null =
+    const datesBetween: Date[] | null =
       dateTo && dateFrom
-        ? Array.from({ length: daysBetweenDates! }, (_, index) =>
-            moment(dateFrom).add(index, 'days'),
-          )
+        ? Array.from({ length: daysBetweenDates! }, (_, index) => addDays(dateFrom, index))
         : null;
 
     if (+amount < 1) {
@@ -95,16 +89,19 @@ const ToolBar = () => {
     const periodData: PeriodType = {
       id: randomId,
       amountOnPeriod: +amount,
-      dateStart: dateFrom!.format('YYYY/MM/DD'),
-      dateEnd: dateTo!.format('YYYY/MM/DD'),
+      dateStart: format(dateFrom!, 'yyyy/MM/dd'),
+      dateEnd: format(dateTo!, 'yyyy/MM/dd'),
       period:
         datesBetween &&
-        `${datesBetween[0].format('YYYY/MM/DD')}-${datesBetween[datesBetween?.length - 1].format('YYYY/MM/DD')}`,
+        `${format(datesBetween[0], 'yyyy/MM/dd')}-${format(
+          datesBetween[datesBetween.length - 1],
+          'yyyy/MM/dd',
+        )}`,
       days: [...Array(daysBetweenDates)].map((_, index) => {
         return {
-          date: datesBetween ? datesBetween[index].format('MM/DD') : '',
-          day: datesBetween ? datesBetween[index].format('dddd') : '',
-          amountPerDay: +(+amount / daysBetweenDates!)?.toFixed(1) || 0,
+          date: datesBetween ? format(datesBetween[index], 'MM/dd') : '',
+          day: datesBetween ? format(datesBetween[index], 'EEEE') : '',
+          amountPerDay: +(+amount / daysBetweenDates!).toFixed(1) || 0,
           expenses: [],
         };
       }),
@@ -125,17 +122,16 @@ const ToolBar = () => {
     setIsOpenDialog(false);
   };
 
-  //META: Init dates
   useEffect(() => {
     if (period?.dateStart && !dateFrom) {
-      setDateFrom(moment(period?.dateStart));
+      setDateFrom(new Date(period?.dateStart));
     }
     if (period?.dateEnd && !dateTo) {
-      setDateTo(moment(period?.dateEnd));
+      setDateTo(new Date(period?.dateEnd));
     }
   }, [dateFrom, dateTo, period?.dateEnd, period?.dateStart]);
 
-  const isMobile = window.innerWidth < 700;
+  const today = new Date();
 
   return (
     <div
@@ -174,23 +170,18 @@ const ToolBar = () => {
         ) : (
           <div className='w-full relative'>
             <span className='absolute bottom-full text-red-500 text-xs'>{isDateError}</span>
-            <DateRangePicker
-              startDate={dateFrom}
-              startDateId='start_date_id'
-              endDate={dateTo}
-              endDateId='end_date_id'
-              onDatesChange={onDatesChange}
-              focusedInput={focusedInput ? focusedInput : null}
-              onFocusChange={(focusedInput) => setFocusedInput(focusedInput)}
-              showClearDates={true}
-              hideKeyboardShortcutsPanel={true}
-              isOutsideRange={() => false}
-              startDatePlaceholderText='Date from'
-              endDatePlaceholderText='Date to'
-              customArrowIcon='—'
+
+            <Datepicker
               disabled={!!period?.dateStart && !!period?.dateEnd}
-              isDayBlocked={(date) => date.isBefore(moment(), 'day')}
-              orientation={isMobile ? 'vertical' : 'horizontal'}
+              value={{ startDate: dateFrom, endDate: dateTo }}
+              onChange={(value) => {
+                onDatesChange({ startDate: value?.startDate!, endDate: value?.endDate! });
+              }}
+              placeholder='Select dates'
+              primaryColor='indigo'
+              containerClassName='flex items-center border rounded-md w-full border-slate-200 px-2 py-1 text-base'
+              minDate={today}
+              separator='-'
             />
           </div>
         )}
