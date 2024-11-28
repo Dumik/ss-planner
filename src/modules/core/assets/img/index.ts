@@ -7,3 +7,8 @@ export { default as ComingSoon } from './coming_soon.png';
 export { default as SWWrong } from './sww.png';
 export { default as Logo } from './logo.png';
 export { default as User } from './user.png';
+export { default as BG1 } from './bg1.jpg';
+export { default as BG2 } from './bg2.jpg';
+export { default as BG3 } from './bg3.jpg';
+export { default as BG4 } from './bg4.jpg';
+export { default as PANDAGif } from './output-onlinegiftools.gif';

@@ -1,9 +1,9 @@
 'use client';
 
 import { FC, ReactNode, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 
 import { useTypedSelector } from '@/store';
-import { usePathname, useRouter } from 'next/navigation';
 
 type Props = {
   children: ReactNode;
@@ -28,7 +28,7 @@ const PrivateRouteProvider: FC<Props> = ({ children }) => {
       ((!isPublicRoute && !isHomePage && !isUndefinedRoute) || pathname === '/') &&
       !accessToken
     ) {
-      router.push('/sign-in');
+      router.push('/');
       return;
     }
   }, [isPublicRoute, isHomePage, isUndefinedRoute, accessToken, pathname]);

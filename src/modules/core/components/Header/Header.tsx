@@ -3,17 +3,17 @@ import { Fragment } from 'react';
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import classNames from 'classnames';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { signOut } from 'firebase/auth';
 
 import { Logo, User } from '@/core/assets';
 import { useAuthActions, useAuthUser } from '@/modules/auth';
 import { usePeriodActions } from '@/modules/dashboard';
-import { signOut } from 'firebase/auth';
 import { auth } from '../../../../../firebaseConfig';
 import { Button, ButtonSizeEnum, ButtonVariantEnum } from '../../ui';
 import { List, X } from '@phosphor-icons/react';
 import { useBannerActions } from '../../slices';
-import { useRouter } from 'next/navigation';
-import { usePathname } from 'next/navigation';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', current: false },
@@ -37,7 +37,7 @@ const Header = () => {
     signOut(auth);
   };
   return (
-    <Disclosure as='nav' className='bg-white  border-b fixed w-full shadow'>
+    <Disclosure as='nav' className='bg-white  border-b fixed w-full shadow z-10'>
       {({ open }) => (
         <>
           <div className='mx-auto  max-w-[1400px] px-2 sm:px-6 lg:px-8'>

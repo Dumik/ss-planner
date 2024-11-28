@@ -68,6 +68,16 @@ const config: Config = {
       xl: '1280px',
       '2xl': '1536px',
     },
+    animation: {
+      pulseSlow: 'pulse 5s infinite', // 5s pulse animation
+    },
+    keyframes: {
+      pulse: {
+        '0%': { transform: 'scale(1)' },
+        '50%': { transform: 'scale(1.1)' },
+        '100%': { transform: 'scale(1)' },
+      },
+    },
   },
   plugins: [],
 };
