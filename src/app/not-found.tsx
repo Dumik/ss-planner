@@ -13,8 +13,10 @@ const Page404 = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className='mb-8'>
+        className='mb-8 flex items-center gap-4 relative'>
+        <span className='absolute font-bold text-[200px] left-[-80px] rotate-12'>4</span>
         <Image src={PANDAGif} alt='Panda GIF' width={300} height={300} className='rounded-md ' />
+        <span className='absolute font-bold text-[200px] right-[-80px] rotate-45'>4</span>
       </motion.div>
 
       <motion.h1
