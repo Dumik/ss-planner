@@ -45,7 +45,13 @@ const DayCardsContainer = () => {
           return (
             <Fragment key={`${index}-header${item.date}`}>
               <div className='col-span-5 md:col-span-6 xl:col-span-5 w-full bg-gray-100 p-1 rounded '>
-                Cash on the period: <span className='font-bold'>{item.amountPerDay * 5} </span>
+                Cash on the period:{' '}
+                <span className='font-bold'>
+                  {' '}
+                  {period?.days
+                    ?.slice(index, index + 5)
+                    .reduce((sum, day) => sum + day.amountPerDay, 0)}{' '}
+                </span>
               </div>
               <DayCard
                 key={item.date}
