@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 import Image from 'next/image';
 
-import { onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { onAuthStateChanged, signInWithPopup,  GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../../../../../firebaseConfig';
 import { useAuthActions } from '@/auth/slices';
 

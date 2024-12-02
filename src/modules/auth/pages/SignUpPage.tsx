@@ -22,25 +22,35 @@ const SignUpPage = () => {
     formState: { errors },
   } = useForm<SignUpFormType>();
 
-  const onSubmit = ({ email, password, confirmPassword }: SignUpFormType) => {
+  const onSubmit = async ({ email, password, confirmPassword }: SignUpFormType) => {
     if (password !== confirmPassword) {
-      return setError('confirmPassword', { message: 'Passwords do not match' });
+      setError('confirmPassword', { message: 'Passwords do not match' });
+      return;
     }
 
-    createUserWithEmailAndPassword(auth, email, password)
-      .then(({ user }) => {
-        user.getIdTokenResult().then((data) => {
-          const expiresIn = data.claims.exp ? +data.claims.exp : 0;
-          grantAccess({
-            accessToken: data.token,
-            expiresIn: expiresIn,
-            refreshToken: '',
-          });
-        });
-      })
-      .catch((error) => {
-        console.log(error);
+    try {
+      const { user } = await createUserWithEmailAndPassword(auth, email, password);
+      const tokenResult = await user.getIdTokenResult();
+      const { token, claims } = tokenResult;
+      const expiresIn = claims.exp ? +claims.exp : Date.now() + 3600 * 1000;
+
+      grantAccess({
+        accessToken: token,
+        expiresIn,
+        refreshToken: user.refreshToken,
       });
+
+      router.push('/dashboard'); 
+    } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        setError('email', { message: 'Email is already in use' });
+      } else if (error.code === 'auth/weak-password') {
+        setError('password', { message: 'Password is too weak' });
+      } else {
+        console.error('Sign-Up Error:', error);
+        alert(error.message || 'An error occurred during sign-up.');
+      }
+    }
   };
 
   const handleSignIn = () => {
@@ -54,27 +64,33 @@ const SignUpPage = () => {
         <Input
           placeholder='Email'
           {...register('email', {
-            required: 'Email is Required',
+            required: 'Email is required',
             pattern: {
               value: /\S+@\S+\.\S+/,
-              message: '',
+              message: 'Invalid email format',
             },
           })}
-          error={errors.email?.message}
+          error={errors.email?.message || ''}
         />
         <Input
           type='password'
           placeholder='Password'
           {...register('password', {
-            required: 'Password is Required',
+            required: 'Password is required',
+            minLength: {
+              value: 6,
+              message: 'Password must be at least 6 characters',
+            },
           })}
-          error={errors.password?.message}
+          error={errors.password?.message || ''}
         />
         <Input
           type='password'
           placeholder='Confirm Password'
-          {...register('confirmPassword', { required: 'Confirm Password is Required' })}
-          error={errors.confirmPassword?.message}
+          {...register('confirmPassword', {
+            required: 'Confirm password is required',
+          })}
+          error={errors.confirmPassword?.message || ''}
         />
         <span className='flex text-sm items-center -mb-4'>
           Already have an account?

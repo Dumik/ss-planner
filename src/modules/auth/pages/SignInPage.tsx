@@ -20,23 +20,24 @@ const SignInPage = () => {
     formState: { errors },
   } = useForm<SignInFormType>();
 
-  const onSubmit = ({ email, password }: SignInFormType) => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then(({ user }) => {
-        user.getIdTokenResult().then((data) => {
-          const expiresIn = data.claims.exp ? +data.claims.exp : 0;
-          grantAccess({
-            accessToken: data.token,
-            expiresIn: expiresIn,
-            refreshToken: '',
-          });
-        });
-      })
-      .catch((error) => {
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
-        console.log(error);
+  const onSubmit = async ({ email, password }: SignInFormType) => {
+    try {
+      const { user } = await signInWithEmailAndPassword(auth, email, password);
+      const tokenResult = await user.getIdTokenResult();
+      const { token, claims } = tokenResult;
+      const expiresIn = claims.exp ? +claims.exp : Date.now() + 3600 * 1000;
+
+      grantAccess({
+        accessToken: token,
+        expiresIn,
+        refreshToken: user.refreshToken, 
       });
+
+      router.push('/dashboard'); 
+    } catch (error: any) {
+      console.error('Login Error:', error);
+      alert(error.message || 'An error occurred during sign-in.');
+    }
   };
 
   const handleSignUp = () => {
@@ -50,21 +51,25 @@ const SignInPage = () => {
         <Input
           placeholder='Email'
           {...register('email', {
-            required: 'Email is Required',
+            required: 'Email is required',
             pattern: {
               value: /\S+@\S+\.\S+/,
-              message: '',
+              message: 'Invalid email format',
             },
           })}
-          error={`${errors.email?.message || ''}`}
+          error={errors.email?.message || ''}
         />
         <Input
           type='password'
           placeholder='Password'
           {...register('password', {
-            required: 'Password is Required',
+            required: 'Password is required',
+            minLength: {
+              value: 6,
+              message: 'Password must be at least 6 characters',
+            },
           })}
-          error={`${errors.password?.message || ''}`}
+          error={errors.password?.message || ''}
         />
         <span className='flex text-sm items-center -mb-4'>
           Don`t have an account?
@@ -72,7 +77,7 @@ const SignInPage = () => {
             text='Sign up'
             size={ButtonSizeEnum.SMALL}
             variant={ButtonVariantEnum.TEXT}
-            className='p-0 w-12 whitespace-nowrap text-nowrap'
+            className='p-0 w-12 whitespace-nowrap'
             type='button'
             onClick={handleSignUp}
           />
