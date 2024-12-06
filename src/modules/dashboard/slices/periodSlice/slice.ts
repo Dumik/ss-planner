@@ -56,6 +56,9 @@ export const periodSlice = createSlice({
 
       state.period = updatedPeriod;
     },
+    clearPeriodState: (state) => {
+      state.period = { id: '', days: [] };
+    },
 
     resetPeriod: (state) => {
       Object.assign(state, initialState);

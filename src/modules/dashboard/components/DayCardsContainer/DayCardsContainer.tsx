@@ -1,5 +1,6 @@
 'use client';
 import { Fragment, useEffect } from 'react';
+import { isBefore, parseISO } from 'date-fns';
 
 import { DayCard } from '@/dashboard/components';
 import { useTypedSelector } from '@/store';
@@ -13,7 +14,7 @@ const DayCardsContainer = () => {
 
   const { period } = useTypedSelector((state) => state.period);
   const { accessToken } = useTypedSelector((state) => state.auth);
-  const { addPeriodExpense, updateExpenses, setPeriod } = usePeriodActions();
+  const { addPeriodExpense, updateExpenses, setPeriod, clearPeriodState } = usePeriodActions();
 
   const { data, isFetching, isLoading } = useFetchPeriodsForUserQuery(user?.uid);
   const [updatePeriodMutation] = useUpdatePeriodDocumentMutation();
@@ -37,6 +38,16 @@ const DayCardsContainer = () => {
       setPeriod({ period: data?.period });
     }
   }, [data?.period.amountOnPeriod, period.amountOnPeriod, isFetching]);
+  const dateNow = new Date();
+
+  useEffect(() => {
+    if (period?.dateEnd) {
+      const isDateEndInPast = isBefore(parseISO(period.dateEnd), new Date());
+      if (isDateEndInPast) {
+        clearPeriodState();
+      }
+    }
+  }, [period?.dateEnd, clearPeriodState]);
 
   return (
     <div className='grid grid-cols-3 gap-3 items-start xl:grid-cols-5 md:grid-cols-6 sm:grid-cols-4 w-full'>
