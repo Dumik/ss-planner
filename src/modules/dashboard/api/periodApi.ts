@@ -46,6 +46,10 @@ export const periodApi = createApi({
     ),
     updatePeriodDocument: builder.mutation<void | null, { documentId: string; newData: any }>({
       async queryFn({ documentId, newData }) {
+        if (!documentId) {
+          alert('No period data provided');
+          return { error: 'No period data provided' };
+        }
         try {
           const documentRef = doc(db, 'periods', documentId);
           await updateDoc(documentRef, newData);
@@ -62,11 +66,16 @@ export const periodApi = createApi({
       { userId?: string; periodData?: PeriodType }
     >({
       async queryFn({ periodData, userId }) {
+        if (!periodData || !userId) {
+          alert('No period data provided');
+          return { error: 'No period data provided' };
+        }
         try {
           const docRef = await addDoc(collection(db, 'periods'), {
             ...periodData,
             userId: userId,
           });
+
           console.log('Document reference:', docRef);
           return { data: null };
         } catch (error: any) {

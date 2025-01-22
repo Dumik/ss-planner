@@ -38,7 +38,6 @@ const DayCardsContainer = () => {
       setPeriod({ period: data?.period });
     }
   }, [data?.period.amountOnPeriod, period.amountOnPeriod, isFetching]);
-  const dateNow = new Date();
 
   useEffect(() => {
     if (period?.dateEnd) {
@@ -52,16 +51,29 @@ const DayCardsContainer = () => {
   return (
     <div className='grid grid-cols-3 gap-3 items-start xl:grid-cols-5 md:grid-cols-6 sm:grid-cols-4 w-full'>
       {period?.days?.map((item, index) => {
-        if (index === 0 || (index + 1) % 6 === 0) {
+        if (index % 7 === 0) {
+          const endIndex = Math.min(index + 7, period?.days?.length);
+
           return (
             <Fragment key={`${index}-header${item.date}`}>
-              <div className='col-span-5 md:col-span-6 xl:col-span-5 w-full bg-gray-100 p-1 rounded '>
+              <div className='col-span-5 md:col-span-6 xl:col-span-5 w-full bg-gray-100 p-1 rounded'>
                 Cash on the period:{' '}
                 <span className='font-bold'>
-                  {' '}
                   {period?.days
-                    ?.slice(index, index + 5)
-                    .reduce((sum, day) => sum + day.amountPerDay, 0)}{' '}
+                    ?.slice(index, endIndex)
+                    .reduce((sum, day) => sum + day.amountPerDay, 0)
+                    .toFixed(2)}
+                </span>{' '}
+                <span className='mx-2'> | </span> Expenses:{' '}
+                <span className='font-bold'>
+                  {period?.days
+                    ?.slice(index, endIndex)
+                    .reduce(
+                      (sum, day) =>
+                        sum + day.expenses.reduce((sum, expense) => sum + expense.price, 0),
+                      0,
+                    )
+                    .toFixed(2)}
                 </span>
               </div>
               <DayCard
@@ -75,6 +87,7 @@ const DayCardsContainer = () => {
             </Fragment>
           );
         }
+
         return (
           <DayCard
             key={item.date}
@@ -86,6 +99,7 @@ const DayCardsContainer = () => {
           />
         );
       })}
+
       {(isLoading || isFetching) && !data?.period.amountOnPeriod && (
         <div className='flex justify-center w-screen'>
           <Loader color='#4C1FA7' style={{ width: '60px' }} />

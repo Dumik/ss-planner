@@ -3,3 +3,4 @@ export * from './components';
 export * from './assets';
 export * from './slices';
 export * from './pages';
+export * from './hooks';
