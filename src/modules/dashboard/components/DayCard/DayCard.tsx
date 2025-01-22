@@ -46,7 +46,7 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
     onAddExpense(dayIndex, newExpense);
     setNewExpense({ price: 0, category: '' });
   };
-
+  console.log('%c jordan day.date', 'color: lime;', day.date);
   const totalAmount = day.expenses.reduce((total, expense) => total + expense.price, 0);
 
   return (

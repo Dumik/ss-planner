@@ -99,7 +99,7 @@ const ToolBar = () => {
         )}`,
       days: [...Array(daysBetweenDates)].map((_, index) => {
         return {
-          date: datesBetween ? format(datesBetween[index], 'MM/dd') : '',
+          date: datesBetween ? format(datesBetween[index], 'yyyy/MM/dd') : '',
           day: datesBetween ? format(datesBetween[index], 'EEEE') : '',
           amountPerDay: +(+amount / daysBetweenDates!).toFixed(1) || 0,
           expenses: [],
