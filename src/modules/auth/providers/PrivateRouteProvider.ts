@@ -15,18 +15,10 @@ const PrivateRouteProvider: FC<Props> = ({ children }) => {
   const { accessToken } = useTypedSelector((state) => state.auth);
   const router = useRouter();
   const pathname = usePathname();
-  const { user } = useAuthUser();
-  const { logout } = useLogout();
 
   const isHomePage = pathname === '/';
   const isUndefinedRoute = /(undefined)/.test(pathname);
   const isPublicRoute = /(api|auth|_next\/static|_next\/image|\/sign-(in|up))/.test(pathname);
-
-  useEffect(() => {
-    if (accessToken && !user?.uid) {
-      logout();
-    }
-  }, []);
 
   useEffect(() => {
     if (isPublicRoute && accessToken) {
