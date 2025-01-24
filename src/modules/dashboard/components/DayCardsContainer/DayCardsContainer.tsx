@@ -1,6 +1,10 @@
 'use client';
 import { Fragment, useEffect } from 'react';
 import { isBefore, parseISO } from 'date-fns';
+import Slider from 'react-slick';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 import { DayCard } from '@/dashboard/components';
 import { useTypedSelector } from '@/store';
@@ -8,6 +12,15 @@ import { usePeriodActions } from '@/dashboard/slices';
 import { useAuthUser } from '@/modules/auth';
 import { useFetchPeriodsForUserQuery, useUpdatePeriodDocumentMutation } from '@/dashboard/api';
 import { Loader } from '@/modules/core';
+import { NextArrow, PreviousArrow } from './Arrows';
+
+const settings = {
+  dots: false,
+  infinite: false,
+  speed: 500,
+  slidesToShow: 5,
+  slidesToScroll: 2,
+};
 
 const DayCardsContainer = () => {
   const { user } = useAuthUser();
@@ -48,55 +61,65 @@ const DayCardsContainer = () => {
     }
   }, [period?.dateEnd, clearPeriodState]);
 
-  return (
-    <div className='grid grid-cols-3 gap-3 items-start xl:grid-cols-5 md:grid-cols-6 sm:grid-cols-4 w-full'>
-      {period?.days?.map((item, index) => {
-        if (index % 7 === 0) {
-          const endIndex = Math.min(index + 7, period?.days?.length);
+  const groupedDays = period?.days?.reduce(
+    (groups, day, index) => {
+      const groupIndex = Math.floor(index / 10);
+      if (!groups[groupIndex]) {
+        groups[groupIndex] = [];
+      }
+      groups[groupIndex].push(day);
+      return groups;
+    },
+    [] as (typeof period.days)[],
+  );
 
-          return (
-            <Fragment key={`${index}-header${item.date}`}>
-              <div className='col-span-5 md:col-span-6 xl:col-span-5 w-full bg-gray-100 p-1 rounded'>
-                Cash on the period:{' '}
-                <span className='font-bold'>
-                  {period?.days
-                    ?.slice(index, endIndex)
-                    .reduce((sum, day) => sum + day.amountPerDay, 0)
-                    .toFixed(2)}
-                </span>{' '}
-                <span className='mx-2'> | </span> Expenses:{' '}
-                <span className='font-bold'>
-                  {period?.days
-                    ?.slice(index, endIndex)
-                    .reduce(
-                      (sum, day) =>
-                        sum + day.expenses.reduce((sum, expense) => sum + expense.price, 0),
-                      0,
-                    )
-                    .toFixed(2)}
-                </span>
-              </div>
-              <DayCard
-                key={item.date}
-                className='xl:col-span-1 sm:col-span-2 col-span-5'
-                day={item}
-                dayIndex={index}
-                onAddExpense={onAddExpense}
-                updateExpenses={onUpdateExpenses}
-              />
-            </Fragment>
-          );
-        }
+  return (
+    <div className='w-full relative overflow-hidden'>
+      {groupedDays?.map((days, groupIndex) => {
+        const cashOnPeriod = days.reduce((sum, day) => sum + day.amountPerDay, 0).toFixed(2);
+        const expensesOnPeriod = days
+          .reduce(
+            (sum, day) =>
+              sum + day.expenses.reduce((expenseSum, expense) => expenseSum + expense.price, 0),
+            0,
+          )
+          .toFixed(2);
+
+        let sliderRef: any = null;
 
         return (
-          <DayCard
-            key={item.date}
-            className='xl:col-span-1 sm:col-span-2 col-span-5'
-            day={item}
-            dayIndex={index}
-            onAddExpense={onAddExpense}
-            updateExpenses={onUpdateExpenses}
-          />
+          <Fragment key={groupIndex}>
+            <div className='w-full bg-gray-100 p-2 rounded sticky top-0 z-10 flex justify-between items-center'>
+              <div>
+                <span>
+                  Cash on the period: <strong>${cashOnPeriod}</strong>{' '}
+                </span>
+                <span className='mx-2'> | </span>
+                <span>
+                  Expenses: <strong>${expensesOnPeriod}</strong>
+                </span>
+              </div>
+              <div className='flex gap-2'>
+                <PreviousArrow onClick={() => sliderRef?.slickPrev()} />
+                <NextArrow onClick={() => sliderRef?.slickNext()} />
+              </div>
+            </div>
+
+            <Slider
+              ref={(slider: any) => (sliderRef = slider)}
+              {...settings}
+              className='py-4 !flex'>
+              {days.map((day, index) => (
+                <DayCard
+                  key={day.date}
+                  day={day}
+                  dayIndex={groupIndex * 10 + index}
+                  onAddExpense={onAddExpense}
+                  updateExpenses={onUpdateExpenses}
+                />
+              ))}
+            </Slider>
+          </Fragment>
         );
       })}
 

@@ -152,7 +152,11 @@ const ToolBar = () => {
             </span>
             <span className='text-lg font-light text-nowrap  sm:!text-center'>
               Total expenses -{' '}
-              <span className='text-lg font-medium text-gray-900'>{totalAmount}</span>
+              <span className='text-lg font-medium text-gray-900'>{totalAmount},</span>
+            </span>
+            <span className='text-lg font-light text-nowrap sm:!text-center'>
+              Amount on period -
+              <span className='text-lg font-medium text-gray-900'>{period.amountOnPeriod}</span>
             </span>
           </div>
         ) : (

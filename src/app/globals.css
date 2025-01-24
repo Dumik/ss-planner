@@ -11,3 +11,15 @@
   --border-color: rgb(209 213 219); /* gray-300 */
   --text-white: rgb(255 255 255); /* white */
 }
+
+.slick-track {
+  display: flex !important;
+  gap: 20px !important;
+  padding-bottom: 16px;
+  align-items: stretch !important;
+  height: 100% !important;
+}
+
+.slick-track div:first-child {
+  height: 100% !important;
+}
