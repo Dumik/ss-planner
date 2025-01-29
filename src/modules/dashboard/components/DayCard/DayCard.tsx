@@ -68,6 +68,7 @@ const DayCard = ({ className, day, onAddExpense, dayIndex, updateExpenses }: Day
         )}
 
         {day.expenses.map(({ price, category }, index) => {
+          console.log('%c jordan category', 'color: lime;', category);
           const inputNamePrice = `price-${dayIndex}-${index}`;
           const inputNameCategory = `category-${dayIndex}-${index}`;
 

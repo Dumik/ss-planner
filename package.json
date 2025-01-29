@@ -16,6 +16,7 @@
     "@reduxjs/toolkit": "^2.2.3",
     "@types/lodash": "^4.17.0",
     "@types/react-dates": "^21.8.6",
+    "axios": "^1.7.9",
     "classnames": "^2.5.1",
     "dayjs": "^1.11.13",
     "firebase": "^10.11.0",
