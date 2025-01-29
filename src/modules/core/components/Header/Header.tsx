@@ -5,12 +5,15 @@ import classNames from 'classnames';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
+import { signOut } from 'firebase/auth';
 
 import { Logo, User } from '@/core/assets';
-import { useAuthUser } from '@/modules/auth';
+import { useAuthActions, useAuthUser } from '@/modules/auth';
+import { usePeriodActions } from '@/modules/dashboard';
+import { auth } from '../../../../../firebaseConfig';
 import { Button, ButtonSizeEnum, ButtonVariantEnum } from '../../ui';
 import { List, X } from '@phosphor-icons/react';
-import useLogout from '@/core/hooks/useLogout';
+import { useBannerActions } from '../../slices';
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', current: false },
@@ -19,18 +22,28 @@ const navigation = [
 
 const Header = () => {
   const router = useRouter();
-  const pathname = usePathname();
-  const { user } = useAuthUser();
-  const { logout } = useLogout();
 
+  const pathname = usePathname();
+
+  const { user } = useAuthUser();
+  const { resetAccess } = useAuthActions();
+  const { resetPeriod } = usePeriodActions();
+  const { resetBanner } = useBannerActions();
+
+  const handleLogOut = () => {
+    resetPeriod();
+    resetAccess();
+    resetBanner();
+    signOut(auth);
+  };
   return (
     <Disclosure as='nav' className='bg-white  border-b fixed w-full shadow z-10'>
       {({ open }) => (
         <>
-          <div className='mx-auto max-w-[1400px] px-2 sm:px-6 lg:px-8'>
+          <div className='mx-auto  max-w-[1400px] px-2 sm:px-6 lg:px-8'>
             <div className='relative flex h-16 items-center justify-between'>
               <div className='absolute inset-y-0 left-0 flex items-center sm:hidden'>
-                {/* Mobile menu button */}
+                {/* Mobile menu button*/}
                 <Disclosure.Button className='relative duration-300 inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:text-purple-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'>
                   <span className='absolute -inset-0.5' />
                   <span className='sr-only'>Open main menu</span>
@@ -127,7 +140,7 @@ const Header = () => {
                               active ? 'bg-gray-100' : '',
                               'block px-4 py-2 text-sm text-gray-800 font-normal !justify-start hover:bg-gray-100 hover:text-purple-900 rounded-none',
                             )}
-                            onClick={logout}
+                            onClick={handleLogOut}
                             fullWith
                           />
                         )}

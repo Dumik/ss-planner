@@ -1,5 +1,6 @@
 import { authSlice } from '@/modules/auth';
 import bannerSlice from '@/modules/core/slices/bannerSlice/slice';
+import manualSlice, { manualActions } from '@/modules/core/slices/manualSlice/slice';
 import bannerApi from '@/modules/dashboard/api/bannerApi';
 import { periodApi } from '@/modules/dashboard/api/periodApi';
 import { periodSlice } from '@/modules/dashboard/slices';
@@ -30,6 +31,7 @@ export const rootReducer = persistCombineReducers(persistConfigRoot, {
   auth: authSlice.reducer,
   banner: bannerSlice.reducer,
   period: periodSlice.reducer,
+  manual: manualSlice.reducer,
   [periodApi.reducerPath]: periodApi.reducer,
   [bannerApi.reducerPath]: bannerApi.reducer,
 });

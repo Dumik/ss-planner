@@ -51,7 +51,7 @@ const Button: FC<Props> = ({
     <button
       type={type}
       className={classNames(
-        'flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2',
+        'flex items-center justify-center rounded-md font-medium transition-colors focus:outline-none ',
         sizeClasses[size],
         variantClasses[variant],
         {

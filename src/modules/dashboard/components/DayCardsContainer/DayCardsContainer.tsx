@@ -54,7 +54,11 @@ const DayCardsContainer = () => {
 
   useEffect(() => {
     if (period?.dateEnd) {
-      const isDateEndInPast = isBefore(parseISO(period.dateEnd), new Date());
+      const isDateEndInPast =
+        typeof period.dateEnd === 'string'
+          ? isBefore(parseISO(period.dateEnd), new Date())
+          : isBefore(period.dateEnd, new Date());
+
       if (isDateEndInPast) {
         clearPeriodState();
       }
@@ -111,7 +115,7 @@ const DayCardsContainer = () => {
               className='py-4 !flex'>
               {days.map((day, index) => (
                 <DayCard
-                  key={day.date}
+                  key={`${day.date}`}
                   day={day}
                   dayIndex={groupIndex * 10 + index}
                   onAddExpense={onAddExpense}

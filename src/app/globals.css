@@ -23,3 +23,11 @@
 .slick-track div:first-child {
   height: 100% !important;
 }
+
+button:focus-visible {
+  outline: none;
+}
+
+input:focus-visible {
+  outline: none;
+}

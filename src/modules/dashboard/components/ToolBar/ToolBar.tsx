@@ -89,17 +89,12 @@ const ToolBar = () => {
     const periodData: PeriodType = {
       id: randomId,
       amountOnPeriod: +amount,
-      dateStart: format(dateFrom!, 'yyyy/MM/dd'),
-      dateEnd: format(dateTo!, 'yyyy/MM/dd'),
-      period:
-        datesBetween &&
-        `${format(datesBetween[0], 'yyyy/MM/dd')}-${format(
-          datesBetween[datesBetween.length - 1],
-          'yyyy/MM/dd',
-        )}`,
+      dateStart: dateFrom!,
+      dateEnd: dateTo!,
+      period: datesBetween && `${datesBetween[0]}-${datesBetween[datesBetween.length - 1]}`,
       days: [...Array(daysBetweenDates)].map((_, index) => {
         return {
-          date: datesBetween ? format(datesBetween[index], 'yyyy/MM/dd') : '',
+          date: datesBetween ? datesBetween[index] : '',
           day: datesBetween ? format(datesBetween[index], 'EEEE') : '',
           amountPerDay: +(+amount / daysBetweenDates!).toFixed(1) || 0,
           expenses: [],

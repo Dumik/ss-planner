@@ -19,7 +19,7 @@ const InputEmpty: React.ForwardRefRenderFunction<HTMLInputElement, InputProps> =
         ref={ref}
         placeholder={placeholder}
         className={classNames(
-          ' outline-none px-2 py-1',
+          ' outline-none px-2 py-1 focus:ring-transparent focus:border-b-2 border-b-2 border-transparent focus:border-indigo-600 rounded-none',
           {
             'border-red-500': error,
           },
