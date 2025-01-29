@@ -47,10 +47,10 @@ const DayCardsContainer = () => {
   };
 
   useEffect(() => {
-    if (data?.period.amountOnPeriod && !period.amountOnPeriod && accessToken && !isFetching) {
+    if (!period.id && data?.period && accessToken) {
       setPeriod({ period: data?.period });
     }
-  }, [data?.period.amountOnPeriod, period.amountOnPeriod, isFetching]);
+  }, [data?.period, period.id, accessToken]);
 
   useEffect(() => {
     if (period?.dateEnd) {
